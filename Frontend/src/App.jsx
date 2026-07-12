@@ -6,10 +6,12 @@ import {
   ArrowLeftRight, ArrowRightLeft, User, Mail, Lock, RefreshCw, Building2,
   Tag, Pencil, Trash2, ChevronRight, FolderTree, X,
   Package, CalendarRange, Eye, Upload, FileText, Check, AlertTriangle,
-  Info, CalendarDays, ExternalLink
+  Info, CalendarDays, ExternalLink,BarChart3 
 
 } from 'lucide-react';
 import './App.css';
+import AnalyticsDashboard from './pages/AnalyticsDashboard';
+
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -1006,6 +1008,13 @@ function App() {
           </div>
 
           <nav className="sidebar-nav">
+            <button 
+  className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
+  onClick={() => setActiveTab('analytics')}
+>
+  <BarChart3 size={18} />
+  <span>Analytics</span>
+</button>
             <button className={`nav-item ${activeTab==='dashboard' ? 'active' : ''}`} onClick={()=>setActiveTab('dashboard')}>
               <LayoutDashboard size={18}/><span>Dashboard</span>
             </button>
@@ -2421,7 +2430,9 @@ function App() {
           </div>
         </div>
       )}
-
+{activeTab === 'analytics' && (
+  <AnalyticsDashboard allAssets={allAssets} stats={stats} />
+)}
     </div>
   );
 }
