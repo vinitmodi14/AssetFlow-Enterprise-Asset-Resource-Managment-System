@@ -15,3 +15,8 @@ CREATE TABLE maintenance_requests (
     FOREIGN KEY (raised_by) REFERENCES employees(employee_id),
     FOREIGN KEY (approved_by) REFERENCES employees(employee_id)
 );
+
+INSERT INTO maintenance_requests (request_id, asset_id, raised_by, issue_description, priority, status, approved_by, technician_name, resolved_at) VALUES
+(1, 9, 4, 'Screen flickers intermittently, needs display panel check', 'High', 'Approved', 2, 'Suresh (Vendor Tech)', NULL),
+(2, 2, 6, 'Printer jams frequently on double-sided printing', 'Medium', 'Pending', NULL, NULL, NULL),
+(3, 10, 8, 'Drill motor overheating after short use', 'Critical', 'Resolved', 2, 'Bosch Service Center', '2026-06-20 16:00:00');

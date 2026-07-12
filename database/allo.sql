@@ -13,3 +13,6 @@ CREATE TABLE allocations (
     FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
     FOREIGN KEY (department_id) REFERENCES departments(department_id)
 );
+
+INSERT INTO allocations (allocation_id, asset_id, employee_id, department_id, allocated_date, expected_return_date, status) VALUES
+(1, 14, 3, 1, '2024-01-16', '2026-12-31', 'Active');

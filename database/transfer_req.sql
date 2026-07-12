@@ -12,3 +12,6 @@ CREATE TABLE transfer_requests (
     FOREIGN KEY (requested_to) REFERENCES employees(employee_id),
     FOREIGN KEY (approved_by) REFERENCES employees(employee_id)
 );
+
+INSERT INTO transfer_requests (transfer_id, allocation_id, requested_by, requested_to, status) VALUES
+(1, 1, 4, 4, 'Requested');

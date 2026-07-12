@@ -9,4 +9,8 @@ CREATE TABLE asset_status_history (
     FOREIGN KEY (asset_id) REFERENCES assets(asset_id),
     FOREIGN KEY (changed_by) REFERENCES employees(employee_id)
 );
- 
+
+INSERT INTO asset_status_history (asset_id, from_status, to_status, changed_by, reason) VALUES
+(9,  'Available', 'Under Maintenance', 2, 'Screen flickering issue reported'),
+(14, 'Available', 'Allocated',         2, 'Allocated to Priya Nair on onboarding'),
+(13, 'Good',       'Retired',          2, 'End of life, replaced by newer stock');

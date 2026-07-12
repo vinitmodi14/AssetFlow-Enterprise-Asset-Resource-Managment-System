@@ -10,3 +10,11 @@ CREATE TABLE audit_findings (
     FOREIGN KEY (asset_id) REFERENCES assets(asset_id),
     FOREIGN KEY (recorded_by) REFERENCES employees(employee_id)
 );
+
+INSERT INTO audit_findings (cycle_id, asset_id, finding, notes, recorded_by) VALUES
+(1, 1,  'Verified', 'Present and in good condition', 2),
+(1, 9,  'Verified', 'Confirmed under maintenance, matches records', 2),
+(1, 13, 'Missing',  'Could not locate in storage during audit', 2);
+ 
+-- Closing cycle 1 would trigger: asset 13 status Retired -> Lost (app logic via changeAssetStatus)
+UPDATE assets SET current_status = 'Lost' WHERE asset_id = 13;
