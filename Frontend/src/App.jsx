@@ -1,14 +1,15 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import {
   LayoutDashboard, Users, LogOut, PlusCircle, Bookmark, Wrench,
   AlertCircle, ShieldAlert, CheckCircle, Clock, Calendar,
-  ArrowLeftRight, User, Mail, Lock, RefreshCw, Building2,
+  ArrowLeftRight, ArrowRightLeft, User, Mail, Lock, RefreshCw, Building2,
   Tag, Pencil, Trash2, ChevronRight, FolderTree, X,
   Package, CalendarRange, Eye, Upload, FileText, Check, AlertTriangle,
-  Info, CalendarDays, ExternalLink, ClipboardCheck
+Info, CalendarDays, ExternalLink, BarChart3, ClipboardCheck
 } from 'lucide-react';
 import './App.css';
-import AssetDirectory from './pages/AssetDirectory';
+import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import AssetAudit from './pages/AssetAudit';
 
 const API_BASE = "http://localhost:5000/api";
@@ -1002,10 +1003,17 @@ function App() {
               <span className="profile-name">{currentUser.name}</span>
               <span className="profile-email">{currentUser.email}</span>
               <span className={`role-badge ${getRoleBadgeClass(currentUser.role)}`}>{currentUser.role}</span>
-            </div>
+            </div>git add Frontend/src/App.jsx
           </div>
 
           <nav className="sidebar-nav">
+            <button 
+  className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
+  onClick={() => setActiveTab('analytics')}
+>
+  <BarChart3 size={18} />
+  <span>Analytics</span>
+</button>
             <button className={`nav-item ${activeTab==='dashboard' ? 'active' : ''}`} onClick={()=>setActiveTab('dashboard')}>
               <LayoutDashboard size={18}/><span>Dashboard</span>
             </button>
@@ -1032,12 +1040,19 @@ function App() {
               </button>
             )}
             <button 
-  className={`nav-item ${activeTab === 'assets' ? 'active' : ''}`}
-  onClick={() => setActiveTab('assets')}
->
-  <Package size={18} />
-  <span>Asset Directory</span>
-</button>
+              className={`nav-item ${activeTab === 'assets' ? 'active' : ''}`}
+              onClick={() => setActiveTab('assets')}
+            >
+              <Package size={18} />
+              <span>Asset Directory</span>
+            </button>
+            <button 
+              className={`nav-item ${activeTab === 'allocation' ? 'active' : ''}`}
+              onClick={() => setActiveTab('allocation')}
+            >
+              <ArrowRightLeft size={18} />
+              <span>Allocation & Transfer</span>
+            </button>
           </nav>
         </div>
 
@@ -1734,16 +1749,16 @@ function App() {
             )}
           </>
         )}
-        {activeTab === 'assets' && (
-          <AssetDirectory allAssets={allAssets} />
-        )}
-        {activeTab === 'audit' && (
+{activeTab === 'audit' && (
           <AssetAudit 
             token={token} 
             currentUser={currentUser} 
             departments={departments}
             directoryUsers={directoryUsers} 
           />
+        )}
+        {activeTab === 'analytics' && (
+          <AnalyticsDashboard allAssets={allAssets} stats={stats} />
         )}
       </main>
 
