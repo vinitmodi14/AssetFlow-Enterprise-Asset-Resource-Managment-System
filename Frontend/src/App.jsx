@@ -6,12 +6,11 @@ import {
   ArrowLeftRight, ArrowRightLeft, User, Mail, Lock, RefreshCw, Building2,
   Tag, Pencil, Trash2, ChevronRight, FolderTree, X,
   Package, CalendarRange, Eye, Upload, FileText, Check, AlertTriangle,
-  Info, CalendarDays, ExternalLink,BarChart3 
-
+Info, CalendarDays, ExternalLink, BarChart3, ClipboardCheck
 } from 'lucide-react';
 import './App.css';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
-
+import AssetAudit from './pages/AssetAudit';
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -1004,7 +1003,7 @@ function App() {
               <span className="profile-name">{currentUser.name}</span>
               <span className="profile-email">{currentUser.email}</span>
               <span className={`role-badge ${getRoleBadgeClass(currentUser.role)}`}>{currentUser.role}</span>
-            </div>
+            </div>git add Frontend/src/App.jsx
           </div>
 
           <nav className="sidebar-nav">
@@ -1031,6 +1030,9 @@ function App() {
             </button>
             <button className={`nav-item ${activeTab==='maintenance' ? 'active' : ''}`} onClick={()=>setActiveTab('maintenance')}>
               <Wrench size={18}/><span>Maintenance</span>
+            </button>
+            <button className={`nav-item ${activeTab==='audit' ? 'active' : ''}`} onClick={()=>setActiveTab('audit')}>
+              <ClipboardCheck size={18}/><span>Asset Audits</span>
             </button>
             {currentUser.role === 'Admin' && (
               <button className={`nav-item ${activeTab==='orgSetup' ? 'active' : ''}`} onClick={()=>setActiveTab('orgSetup')}>
@@ -1069,6 +1071,7 @@ function App() {
               {activeTab === 'allocation' && 'Asset Allocations & Transfers'}
               {activeTab === 'booking' && 'Resource Bookings'}
               {activeTab === 'maintenance' && 'Maintenance Center'}
+              {activeTab === 'audit' && 'Asset Audits'}
               {activeTab === 'orgSetup' && 'Organization Setup'}
             </h1>
             <p className="header-meta">Logged in as <strong style={{color:'var(--text-title)'}}>{currentUser.name}</strong> · {currentUser.role}</p>
@@ -1745,6 +1748,17 @@ function App() {
               </div>
             )}
           </>
+        )}
+{activeTab === 'audit' && (
+          <AssetAudit 
+            token={token} 
+            currentUser={currentUser} 
+            departments={departments}
+            directoryUsers={directoryUsers} 
+          />
+        )}
+        {activeTab === 'analytics' && (
+          <AnalyticsDashboard allAssets={allAssets} stats={stats} />
         )}
       </main>
 
@@ -2430,9 +2444,7 @@ function App() {
           </div>
         </div>
       )}
-{activeTab === 'analytics' && (
-  <AnalyticsDashboard allAssets={allAssets} stats={stats} />
-)}
+
     </div>
   );
 }
