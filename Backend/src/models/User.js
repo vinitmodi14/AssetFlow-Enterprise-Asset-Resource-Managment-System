@@ -24,26 +24,29 @@ const userSchema = new mongoose.Schema(
       enum: ["Employee", "Asset Manager", "Department Head", "Admin"],
       default: "Employee",
     },
+    
     department: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Department",
+      default: null,
+    },
+    status: {
       type: String,
-      default: "General",
+      enum: ["Active", "Inactive"],
+      default: "Active",
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Hash password before saving
+
 userSchema.pre("save", async function () {
-  if (!this.isModified("password")) {
-    return;
-  }
+  if (!this.isModified("password")) return;
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-// Compare password method
+
 userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };

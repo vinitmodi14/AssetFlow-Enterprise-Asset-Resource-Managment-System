@@ -52,4 +52,14 @@ const managerOrAdmin = (req, res, next) => {
   }
 };
 
-module.exports = { protect, adminOnly, managerOrAdmin };
+// Check if user is Asset Manager, Department Head, or Admin
+const managerOrDeptHead = (req, res, next) => {
+  const allowed = ["Admin", "Asset Manager", "Department Head"];
+  if (req.user && allowed.includes(req.user.role)) {
+    next();
+  } else {
+    return res.status(403).json({ message: "Access denied. Manager or Department Head required." });
+  }
+};
+
+module.exports = { protect, adminOnly, managerOrAdmin, managerOrDeptHead };

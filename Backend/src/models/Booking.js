@@ -7,16 +7,17 @@ const bookingSchema = new mongoose.Schema(
       ref: "Asset",
       required: true,
     },
-    user: {
+    bookedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    startDate: {
+    
+    startTime: {
       type: Date,
       required: true,
     },
-    endDate: {
+    endTime: {
       type: Date,
       required: true,
     },
@@ -27,13 +28,23 @@ const bookingSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Pending", "Approved", "Rejected", "Active", "Returned", "Overdue"],
-      default: "Active",
+      enum: ["Upcoming", "Ongoing", "Completed", "Cancelled"],
+      default: "Upcoming",
+    },
+    cancelReason: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    reminderSent: {
+      type: Boolean,
+      default: false,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
+
+bookingSchema.index({ asset: 1, startTime: 1, endTime: 1 });
+bookingSchema.index({ bookedBy: 1, status: 1 });
 
 module.exports = mongoose.model("Booking", bookingSchema);

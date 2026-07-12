@@ -7,24 +7,50 @@ const transferSchema = new mongoose.Schema(
       ref: "Asset",
       required: true,
     },
+    
+    allocation: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Allocation",
+      default: null,
+    },
+    
     fromUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
+    
     toUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
+    
+    requestedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
     status: {
       type: String,
-      enum: ["Pending", "Approved", "Rejected"],
-      default: "Pending",
+      enum: ["Requested", "Approved", "Rejected", "Completed"],
+      default: "Requested",
     },
     comments: {
       type: String,
       trim: true,
+      default: "",
+    },
+    rejectionReason: {
+      type: String,
+      trim: true,
+      default: "",
     },
     requestDate: {
       type: Date,
@@ -35,9 +61,7 @@ const transferSchema = new mongoose.Schema(
       default: null,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Transfer", transferSchema);
