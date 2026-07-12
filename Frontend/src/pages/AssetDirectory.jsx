@@ -1,19 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Search, Package, MapPin, Tag } from 'lucide-react';
  
-// ---------------------------------------------------------------------------
-// AssetDirectory
-// Reuses `allAssets` already fetched by the Dashboard's /api/dashboard/stats
-// call — no new backend endpoint required to get this working today.
-//
-// NOTE for backend teammate: this does client-side search/filter only.
-// For the full PDF spec (search by Asset Tag, Serial Number, QR code,
-// category, status, department, location — server-side), we'll eventually
-// want a dedicated endpoint like:
-//   GET /api/assets?search=&category=&status=&department=&location=
-//   GET /api/assets/:id   (for full history: allocation + maintenance)
-// ---------------------------------------------------------------------------
- 
 function AssetDirectory({ allAssets = [] }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
