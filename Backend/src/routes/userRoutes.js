@@ -8,7 +8,7 @@ const {
 } = require("../controllers/userController");
 const { protect, adminOnly } = require("../middleware/authMiddleware");
 
-router.get("/", protect, adminOnly, getAllUsers);
+router.get("/", protect, getAllUsers);
 router.patch("/:id/role", protect, adminOnly, updateUserRole);
 router.patch("/:id/status", protect, adminOnly, updateUserStatus);
 router.patch("/:id/department", protect, adminOnly, updateUserDepartment);

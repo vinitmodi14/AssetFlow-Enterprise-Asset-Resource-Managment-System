@@ -112,6 +112,58 @@ const assetCategorySchema = z.object({
   status: z.enum(["Active", "Inactive"]).default("Active"),
 });
 
+// ── Screen 4: Full Asset Registration Schema ──
+const registerAssetSchema = z.object({
+  name: z.string().min(1, { message: "Asset name is required" }).trim(),
+  serialNumber: z.string().min(1, { message: "Serial number is required" }).trim(),
+  category: z.string().optional().nullable(),
+  department: z.string().optional().nullable(),
+  status: z
+    .enum(["Available", "Allocated", "Reserved", "Under Maintenance", "Lost", "Retired", "Disposed"])
+    .default("Available"),
+  condition: z.enum(["Excellent", "Good", "Fair", "Damaged"]).default("Good"),
+  location: z.string().optional().default(""),
+  acquisitionDate: z.string().optional().nullable(),
+  acquisitionCost: z.number().optional().nullable(),
+  isBookable: z.boolean().default(false),
+});
+
+// ── Screen 5: Allocation Schema ──
+const allocationSchema = z.object({
+  assetId: z.string().min(1, { message: "Asset ID is required" }),
+  allocatedToUserId: z.string().min(1, { message: "Target user is required" }),
+  departmentId: z.string().optional().nullable(),
+  expectedReturnDate: z.string().optional().nullable(),
+  notes: z.string().optional().default(""),
+});
+
+// ── Screen 5: Transfer Request Schema ──
+const transferRequestSchema = z.object({
+  assetId: z.string().min(1, { message: "Asset ID is required" }),
+  toUserId: z.string().min(1, { message: "Target user is required" }),
+  comments: z.string().optional().default(""),
+});
+
+// ── Screen 6: Booking Schema (datetime) ──
+const createBookingSchema = z.object({
+  assetId: z.string().min(1, { message: "Asset ID is required" }),
+  startTime: z.string().refine((v) => !isNaN(Date.parse(v)), { message: "Invalid start datetime" }),
+  endTime: z.string().refine((v) => !isNaN(Date.parse(v)), { message: "Invalid end datetime" }),
+  purpose: z.string().min(1, { message: "Purpose is required" }).trim(),
+}).refine((d) => new Date(d.endTime) > new Date(d.startTime), {
+  message: "End time must be after start time",
+  path: ["endTime"],
+});
+
+// ── Screen 7: Maintenance Request Schema ──
+const maintenanceRequestSchema = z.object({
+  assetId: z.string().min(1, { message: "Asset ID is required" }),
+  type: z.enum(["Routine", "Repair", "Upgrade"]),
+  description: z.string().min(1, { message: "Description is required" }).trim(),
+  priority: z.enum(["Low", "Medium", "High"]).default("Medium"),
+  photoUrl: z.string().optional().default(""),
+});
+
 module.exports = {
   signupSchema,
   loginSchema,
@@ -120,4 +172,10 @@ module.exports = {
   maintenanceSchema,
   departmentSchema,
   assetCategorySchema,
+  // New schemas for Screens 4-7
+  registerAssetSchema,
+  allocationSchema,
+  transferRequestSchema,
+  createBookingSchema,
+  maintenanceRequestSchema,
 };

@@ -12,19 +12,17 @@ const {
 } = require("../controllers/organizationController");
 const { protect, adminOnly } = require("../middleware/authMiddleware");
 
-// All org routes require Admin role
-router.use(protect, adminOnly);
+// Read routes accessible to all authenticated users
+router.get("/departments", protect, getDepartments);
+router.get("/categories", protect, getCategories);
 
-// Department routes
-router.get("/departments", getDepartments);
-router.post("/departments", createDepartment);
-router.patch("/departments/:id", updateDepartment);
-router.delete("/departments/:id", deactivateDepartment);
+// Write routes require Admin role
+router.post("/departments", protect, adminOnly, createDepartment);
+router.patch("/departments/:id", protect, adminOnly, updateDepartment);
+router.delete("/departments/:id", protect, adminOnly, deactivateDepartment);
 
-// Asset Category routes
-router.get("/categories", getCategories);
-router.post("/categories", createCategory);
-router.patch("/categories/:id", updateCategory);
-router.delete("/categories/:id", deactivateCategory);
+router.post("/categories", protect, adminOnly, createCategory);
+router.patch("/categories/:id", protect, adminOnly, updateCategory);
+router.delete("/categories/:id", protect, adminOnly, deactivateCategory);
 
 module.exports = router;
