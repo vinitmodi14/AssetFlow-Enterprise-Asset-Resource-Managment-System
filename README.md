@@ -2,81 +2,93 @@
 
 <div align="center">
 
-### Streamline Asset Tracking, Resource Booking & Maintenance Management
+![Status](https://img.shields.io/badge/Status-Completed-success)
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Node.js](https://img.shields.io/badge/Node.js-Express-green)
+![React](https://img.shields.io/badge/React-Frontend-61DAFB)
+![MySQL](https://img.shields.io/badge/Database-MySQL-orange)
 
-An Enterprise Asset & Resource Management System built to help organizations efficiently manage assets, shared resources, maintenance workflows, audits, and employee allocations through a centralized ERP platform.
+### A Complete Enterprise Asset & Resource Management System
+
+Efficiently manage organizational assets, resource bookings, maintenance workflows, audits, and employee allocations through a centralized ERP platform.
 
 </div>
 
 ---
 
-## 📖 Overview
+# 📖 About
 
-AssetFlow is a modern ERP solution designed to simplify how organizations manage physical assets and shared resources.
+AssetFlow is a modern ERP-based Asset & Resource Management System developed during the **Odoo Hackathon**. It helps organizations digitize and automate asset tracking, resource allocation, maintenance approvals, booking management, audit cycles, and reporting.
 
-Instead of relying on spreadsheets or manual records, AssetFlow provides a centralized platform to:
-
-- Track assets throughout their lifecycle
-- Allocate assets to employees and departments
-- Manage shared resource bookings
-- Handle maintenance approvals
-- Conduct asset audits
-- Monitor organization-wide analytics
-
-The system is designed with scalability, security, and role-based workflows in mind.
+Instead of relying on spreadsheets and manual processes, AssetFlow provides a centralized platform with role-based access control and real-time visibility into organizational assets.
 
 ---
 
-# ✨ Features
+# ✨ Key Features
 
 ## 🔐 Authentication
 
 - Secure Login & Signup
 - JWT Authentication
+- Password Encryption using bcrypt
 - Forgot Password
-- Session Validation
-- Role Based Access Control (RBAC)
+- Session Management
+- Role-Based Access Control (RBAC)
 
 ---
 
 ## 📊 Dashboard
 
-Real-time KPI Dashboard including:
+Real-time dashboard displaying:
 
-- Available Assets
-- Allocated Assets
-- Active Bookings
-- Maintenance Requests
-- Pending Transfers
-- Upcoming Returns
-- Overdue Notifications
+- 📦 Total Assets
+- ✅ Available Assets
+- 👥 Allocated Assets
+- 🔧 Maintenance Requests
+- 📅 Active Resource Bookings
+- 🔄 Pending Transfers
+- ⏰ Upcoming Returns
+- 🚨 Overdue Returns
 
 ---
 
 ## 🏢 Organization Management
 
-Admin can manage:
+### Department Management
 
-- Departments
-- Employee Directory
-- Asset Categories
-- Department Heads
-- Asset Managers
+- Create Department
+- Update Department
+- Deactivate Department
+- Assign Department Head
+
+### Asset Categories
+
+- Create Categories
+- Edit Categories
+- Category-wise Asset Organization
+
+### Employee Directory
+
+- Employee Registration
+- Department Assignment
+- Role Assignment
+- Employee Status Management
 
 ---
 
 ## 💻 Asset Management
 
-- Register Assets
+- Register New Asset
+- Auto-generated Asset Tag
 - Asset Categories
-- Asset Tags
-- QR Code Support
-- Asset Lifecycle Tracking
-- Upload Asset Documents
+- Serial Number Management
+- Asset Location
+- Asset Images/Documents
+- Asset Search
+- Asset Filters
 - Asset History
-- Asset Search & Filters
 
-Supported Asset States:
+### Asset Lifecycle
 
 - Available
 - Allocated
@@ -90,21 +102,23 @@ Supported Asset States:
 
 ## 👥 Asset Allocation
 
-- Allocate Assets
-- Return Assets
+- Allocate Asset to Employee
+- Allocate Asset to Department
+- Expected Return Date
+- Asset Return Workflow
 - Transfer Requests
 - Conflict Detection
-- Expected Return Date
 - Allocation History
 
 ---
 
 ## 📅 Resource Booking
 
-Book shared resources like:
+Book shared organizational resources like:
 
 - Meeting Rooms
 - Vehicles
+- Projectors
 - Equipment
 
 Features:
@@ -113,37 +127,48 @@ Features:
 - Time Slot Booking
 - Overlap Validation
 - Booking Status
+- Booking Cancellation
+- Booking Reschedule
 - Reminder Notifications
 
 ---
 
 ## 🔧 Maintenance Management
 
-Workflow:
+Complete maintenance workflow:
 
+```
 Pending
-→ Approved / Rejected
-→ Technician Assigned
-→ In Progress
-→ Resolved
+     ↓
+Approved
+     ↓
+Technician Assigned
+     ↓
+In Progress
+     ↓
+Resolved
+```
 
-Includes:
+Features:
 
-- Priority Management
-- Issue Description
-- Image Upload
+- Raise Maintenance Request
+- Attach Images
+- Set Priority
+- Approval Workflow
 - Maintenance History
+- Automatic Asset Status Update
 
 ---
 
-## 📝 Asset Audits
+## 📝 Asset Audit
 
-- Audit Cycle Creation
+- Create Audit Cycle
 - Assign Auditors
 - Verify Assets
-- Missing Assets
-- Damaged Assets
+- Missing Asset Detection
+- Damaged Asset Tracking
 - Auto-generated Discrepancy Reports
+- Audit History
 
 ---
 
@@ -152,11 +177,12 @@ Includes:
 Generate reports for:
 
 - Asset Utilization
-- Department Allocations
-- Maintenance Trends
+- Department-wise Allocation
+- Maintenance Frequency
 - Idle Assets
-- Booking Heatmaps
-- Retirement Forecasts
+- Resource Booking Heatmap
+- Retirement Forecast
+- Export Reports
 
 ---
 
@@ -169,9 +195,10 @@ Receive notifications for:
 - Booking Confirmation
 - Booking Reminder
 - Maintenance Approval
+- Maintenance Rejection
 - Transfer Approval
+- Overdue Return Alerts
 - Audit Reports
-- Overdue Returns
 
 ---
 
@@ -181,10 +208,11 @@ Receive notifications for:
 
 - Manage Departments
 - Manage Asset Categories
-- Employee Management
+- Manage Employees
 - Assign Roles
-- View Analytics
 - Manage Audit Cycles
+- View Reports & Analytics
+- Monitor Entire Organization
 
 ---
 
@@ -194,15 +222,15 @@ Receive notifications for:
 - Allocate Assets
 - Approve Transfers
 - Approve Maintenance
-- Approve Returns
+- Verify Asset Returns
 
 ---
 
 ## 🏢 Department Head
 
 - View Department Assets
+- Approve Allocation Requests
 - Approve Transfers
-- Approve Allocations
 - Book Shared Resources
 
 ---
@@ -210,42 +238,43 @@ Receive notifications for:
 ## 👤 Employee
 
 - View Assigned Assets
-- Book Resources
+- Book Shared Resources
 - Raise Maintenance Requests
-- Initiate Returns
-- Request Transfers
+- Initiate Asset Return
+- Request Asset Transfer
 
 ---
 
-# 🔄 Asset Workflow
+# 🔄 System Workflow
 
-```text
-Admin
-      │
-      ▼
-Organization Setup
-      │
-      ▼
-Asset Registration
-      │
-      ▼
-Asset Available
-      │
-      ▼
-Asset Allocation
-      │
-      ▼
-Employee Uses Asset
-      │
-      ├──────────────┐
-      ▼              ▼
-Maintenance      Transfer
+```
+                Admin
+                  │
+                  ▼
+      Organization Setup
+                  │
+                  ▼
+        Asset Registration
+                  │
+                  ▼
+        Asset Available
+                  │
+      ┌───────────┴───────────┐
+      ▼                       ▼
+Asset Allocation        Shared Resource
+      │                  Booking
+      ▼                       │
+ Employee Uses Asset           │
+      │                        │
+      ├──────────────┐         │
+      ▼              ▼         ▼
+Maintenance      Transfer   Completion
       │              │
       ▼              ▼
 Resolved      Reallocated
       │
       ▼
-Returned
+Asset Returned
       │
       ▼
 Available Again
@@ -253,19 +282,17 @@ Available Again
 
 ---
 
-# 🏗️ Project Architecture
+# 🏗️ System Architecture
 
 ```
-Frontend (React.js)
-        │
-        ▼
-REST APIs
-        │
-        ▼
-Backend (Node.js + Express.js)
-        │
-        ▼
-MongoDB Database
+               React.js Frontend
+                      │
+                      │ REST API
+                      ▼
+          Node.js + Express.js Backend
+                      │
+                      ▼
+                  MySQL Database
 ```
 
 ---
@@ -275,29 +302,59 @@ MongoDB Database
 ## Frontend
 
 - React.js
-- Tailwind CSS
 - Redux Toolkit
-- React Router
+- Tailwind CSS
+- React Router DOM
 - Axios
+
+---
 
 ## Backend
 
 - Node.js
 - Express.js
 - JWT Authentication
+- bcrypt.js
 - Multer
-- Cloudinary
+- CORS
+- dotenv
+
+---
 
 ## Database
 
-- MongoDB
-- Mongoose
+- MySQL
+- SQL
 
-## Other Tools
+---
+
+## Tools
 
 - Git
 - GitHub
 - Postman
+- VS Code
+
+---
+
+# 💾 Database Design
+
+Main database tables:
+
+- Users
+- Roles
+- Departments
+- Employees
+- Asset Categories
+- Assets
+- Asset Allocations
+- Asset Transfers
+- Resource Bookings
+- Maintenance Requests
+- Audit Cycles
+- Audit Items
+- Notifications
+- Activity Logs
 
 ---
 
@@ -307,22 +364,32 @@ MongoDB Database
 AssetFlow/
 │
 ├── Frontend/
+│   ├── public/
 │   ├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── redux/
-│   └── services/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── layouts/
+│   │   ├── pages/
+│   │   ├── redux/
+│   │   ├── services/
+│   │   ├── utils/
+│   │   └── App.jsx
+│   │
+│   └── package.json
 │
 ├── Backend/
+│   ├── config/
 │   ├── controllers/
+│   ├── middleware/
 │   ├── models/
 │   ├── routes/
-│   ├── middleware/
-│   ├── config/
-│   └── utils/
+│   ├── database/
+│   ├── utils/
+│   ├── server.js
+│   └── package.json
 │
 ├── README.md
-└── package.json
+└── .gitignore
 ```
 
 ---
@@ -332,74 +399,122 @@ AssetFlow/
 ## Clone Repository
 
 ```bash
-git clone https://github.com/your-username/AssetFlow.git
+git clone https://github.com/pratham9805/AssetFlow.git
 ```
 
-Move into project
+---
+
+## Move into Project
 
 ```bash
 cd AssetFlow
 ```
 
-Install Backend
+---
+
+## Install Backend Dependencies
 
 ```bash
 cd Backend
 npm install
 ```
 
-Install Frontend
+---
+
+## Install Frontend Dependencies
 
 ```bash
 cd ../Frontend
 npm install
 ```
 
-Run Backend
+---
 
-```bash
-npm run dev
+# 🔑 Environment Variables
+
+Create a `.env` file inside the Backend folder.
+
+```env
+PORT=5000
+
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_password
+DB_NAME=assetflow
+
+JWT_SECRET=your_jwt_secret
+
+
 ```
 
-Run Frontend
+---
+
+# ▶️ Run Backend
 
 ```bash
+cd Backend
 npm run dev
 ```
 
 ---
 
-# 🌟 Future Enhancements
+# ▶️ Run Frontend
 
-- QR Code Scanner
-- Barcode Support
+```bash
+cd Frontend
+npm run dev
+```
+
+---
+
+# 📊 MySQL Database Setup
+
+Create a MySQL database:
+
+```sql
+CREATE DATABASE assetflow;
+```
+
+Update your `.env` file with your MySQL credentials.
+
+Run your SQL schema and seed files (if available).
+
+---
+
+---
+
+# 🚀 Future Enhancements
+
+- QR Code Integration
+- Barcode Scanner
 - Email Notifications
-- SMS Notifications
-- AI-powered Asset Prediction
+- SMS Alerts
+- AI-Based Asset Prediction
 - Mobile Application
-- RFID Integration
+- RFID Support
 - Multi-Organization Support
-- Real-time Dashboard
-- Export PDF & Excel Reports
+- Dark Mode
+- Advanced Analytics
+- Real-time Notifications using Socket.io
 
 ---
 
 # 🤝 Contributors
 
-Developed during the **Odoo Hackathon** by Team **AssetFlow**.
+Developed during the **Odoo Hackathon** by Team **AssetFlow**
 
 ---
 
-# 📄 License
+# 📜 License
 
-This project is developed for educational and hackathon purposes.
+This project is licensed under the MIT License.
 
 ---
 
 <div align="center">
 
-### ⭐ If you like this project, don't forget to give it a Star!
+### ⭐ Star this repository if you found it useful!
 
-Made with ❤️ using MERN Stack
+Made with ❤️ using React.js, Node.js, Express.js & MySQL
 
 </div>
