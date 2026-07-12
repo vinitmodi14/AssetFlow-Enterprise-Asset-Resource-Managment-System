@@ -7,17 +7,25 @@ const auditCycleSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+<<<<<<< HEAD
+    department: {
+=======
     scopeType: {
       type: String,
       enum: ["department", "location"],
       required: true,
     },
     scopeDepartment: {
+>>>>>>> ad464a556cdd42c48bcd0aa2edfe0f24278bdd35
       type: mongoose.Schema.Types.ObjectId,
       ref: "Department",
       default: null,
     },
+<<<<<<< HEAD
+    location: {
+=======
     scopeLocation: {
+>>>>>>> ad464a556cdd42c48bcd0aa2edfe0f24278bdd35
       type: String,
       trim: true,
       default: "",
@@ -34,6 +42,15 @@ const auditCycleSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+<<<<<<< HEAD
+        required: true,
+      },
+    ],
+    status: {
+      type: String,
+      enum: ["Draft", "Active", "Closed"],
+      default: "Draft",
+=======
       },
     ],
     createdBy: {
@@ -77,6 +94,7 @@ const auditCycleSchema = new mongoose.Schema(
           auditedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
         },
       ],
+>>>>>>> ad464a556cdd42c48bcd0aa2edfe0f24278bdd35
     },
     closedAt: {
       type: Date,
@@ -91,8 +109,11 @@ const auditCycleSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+<<<<<<< HEAD
+=======
 auditCycleSchema.index({ status: 1 });
 auditCycleSchema.index({ createdBy: 1 });
 auditCycleSchema.index({ auditors: 1 });
 
+>>>>>>> ad464a556cdd42c48bcd0aa2edfe0f24278bdd35
 module.exports = mongoose.model("AuditCycle", auditCycleSchema);
