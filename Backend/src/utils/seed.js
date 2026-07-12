@@ -18,7 +18,6 @@ const seedData = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("Database connected.");
 
-    // ── Clear all collections ──
     console.log("Clearing all collections...");
     await Promise.all([
       User.deleteMany({}), Asset.deleteMany({}),
@@ -29,7 +28,6 @@ const seedData = async () => {
     ]);
     console.log("Cleared.");
 
-    // ── Drop legacy indexes ──
     try {
       await Promise.all([
         User.collection.dropIndexes(), Asset.collection.dropIndexes(),
@@ -38,11 +36,9 @@ const seedData = async () => {
       ]);
     } catch (e) { console.log("Index drop skipped:", e.message); }
 
-    // ── Seed Counter ──
     await Counter.create({ name: "assetTag", seq: 0 });
     console.log("Counter seeded.");
 
-    // ── Seed Asset Categories ──
     console.log("Seeding categories...");
     const [catElec, catFurniture, catVehicles, catOffice, catRooms] = await Promise.all([
       AssetCategory.create({ name: "Electronics",    description: "Computers, monitors, devices", customFields: [{ fieldName: "warrantyPeriod", fieldType: "number", required: true }, { fieldName: "modelNumber", fieldType: "text", required: false }], status: "Active" }),
@@ -53,7 +49,6 @@ const seedData = async () => {
     ]);
     console.log("Categories seeded.");
 
-    // ── Seed Departments ──
     console.log("Seeding departments...");
     const [deptIT, deptEng, deptMkt, deptLog] = await Promise.all([
       Department.create({ name: "IT Operations",  description: "Manages all internal IT infrastructure", status: "Active" }),
@@ -64,7 +59,6 @@ const seedData = async () => {
     await Department.create({ name: "Human Resources", description: "People ops", status: "Active" });
     console.log("Departments seeded.");
 
-    // ── Seed Users ──
     console.log("Seeding users...");
     const admin = new User({ name:"System Admin",    email:"admin@assetflow.com",    password:"AdminPassword123",    role:"Admin",            department:deptIT._id,  status:"Active" });
     await admin.save();
@@ -82,13 +76,11 @@ const seedData = async () => {
     await Department.findByIdAndUpdate(deptEng._id, { head: deptHead._id });
     await Department.findByIdAndUpdate(deptLog._id, { head: manager._id });
 
-    // ── Helper: get next asset tag ──
     const nextTag = async () => {
       const c = await Counter.findOneAndUpdate({ name: "assetTag" }, { $inc: { seq: 1 } }, { new: true });
       return `AF-${String(c.seq).padStart(4, "0")}`;
     };
 
-    // ── Seed Assets ──
     console.log("Seeding assets...");
     const now          = new Date();
     const fiveDays     = new Date(now.getTime() + 5  * 86400000);
@@ -107,23 +99,19 @@ const seedData = async () => {
     await Asset.create(           { assetTag: await nextTag(), name: "Projector Epson",    serialNumber: "SN-PROJ-301",    category: catElec._id,      status: "Retired",          department: deptIT._id,  condition: "Damaged",   location: "IT Storage Room",   acquisitionDate: new Date("2019-06-01"), acquisitionCost: 800,   isBookable: false, customFieldValues: { warrantyPeriod: 12 } });
     console.log("Assets seeded.");
 
-    // ── Seed Allocations ──
     console.log("Seeding allocations...");
     const alloc2 = await Allocation.create({ asset: a2._id, allocatedTo: emp1._id, allocatedBy: manager._id, department: deptEng._id, startDate: tenDaysAgo, expectedReturnDate: fiveDays, status: "Active",   notes: "Regular workstation" });
     await Allocation.create(               { asset: a3._id, allocatedTo: emp2._id, allocatedBy: manager._id, department: deptMkt._id, startDate: tenDaysAgo, expectedReturnDate: fourDaysAgo, status: "Active", notes: "Marketing campaign work" });
     const alloc8 = await Allocation.create({ asset: a8._id, allocatedTo: deptHead._id, allocatedBy: admin._id, department: deptEng._id, startDate: new Date("2024-01-01"), status: "Active", notes: "Permanent desk assignment" });
 
-    // Update asset current holders
     await Asset.findByIdAndUpdate(a2._id, { currentHolder: emp1._id,    expectedReturnDate: fiveDays });
     await Asset.findByIdAndUpdate(a3._id, { currentHolder: emp2._id,    expectedReturnDate: fourDaysAgo });
     await Asset.findByIdAndUpdate(a8._id, { currentHolder: deptHead._id });
     console.log("Allocations seeded.");
 
-    // ── Seed a Transfer Request ──
     await Transfer.create({ asset: a4._id, allocation: alloc2._id, fromUser: emp1._id, toUser: emp2._id, requestedBy: emp2._id, status: "Requested", comments: "John needs dual monitor for marketing project." });
     console.log("Transfer seeded.");
 
-    // ── Seed Bookings (with full datetime) ──
     console.log("Seeding bookings...");
     const todayBase = new Date(); todayBase.setHours(0,0,0,0);
     const t = (h, m=0) => new Date(todayBase.getTime() + h*3600000 + m*60000);
@@ -134,7 +122,6 @@ const seedData = async () => {
     await Booking.create({ asset: a7._id, bookedBy: emp1._id, startTime: t(-24), endTime: t(-22), purpose: "Yesterday's Meeting",   status: "Completed" });
     console.log("Bookings seeded.");
 
-    // ── Seed Maintenance ──
     console.log("Seeding maintenance...");
     await Maintenance.create({ asset: a5._id, requestedBy: manager._id, type: "Repair",   description: "Replace cracked screen and test touch response.", priority: "High",   status: "In Progress",      approvedBy: admin._id, assignedTechnicianName: "Ravi Kumar", scheduledDate: now });
     await Maintenance.create({ asset: a1._id, requestedBy: emp1._id,    type: "Routine",  description: "Annual hardware check and software update.",       priority: "Low",    status: "Pending" });
