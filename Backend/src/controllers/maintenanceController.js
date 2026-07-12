@@ -2,11 +2,6 @@ const Maintenance = require("../models/Maintenance");
 const Asset       = require("../models/Asset");
 const { maintenanceRequestSchema } = require("../utils/validation");
 
-// ─────────────────────────────────────────
-// @desc  Raise a maintenance request
-// @route POST /api/maintenance
-// @access All authenticated
-// ─────────────────────────────────────────
 const createRequest = async (req, res) => {
   try {
     const result = maintenanceRequestSchema.safeParse(req.body);
@@ -35,12 +30,6 @@ const createRequest = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Approve a maintenance request (Asset Manager)
-//        Asset status → Under Maintenance
-// @route PATCH /api/maintenance/:id/approve
-// @access Asset Manager / Admin
-// ─────────────────────────────────────────
 const approveRequest = async (req, res) => {
   try {
     const maint = await Maintenance.findById(req.params.id).populate("asset");
@@ -52,7 +41,6 @@ const approveRequest = async (req, res) => {
     maint.approvedBy = req.user._id;
     await maint.save();
 
-    // Update asset status
     await Asset.findByIdAndUpdate(maint.asset._id || maint.asset, { status: "Under Maintenance" });
 
     const populated = await Maintenance.findById(maint._id)
@@ -67,11 +55,6 @@ const approveRequest = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Reject a maintenance request
-// @route PATCH /api/maintenance/:id/reject
-// @access Asset Manager / Admin
-// ─────────────────────────────────────────
 const rejectRequest = async (req, res) => {
   try {
     const maint = await Maintenance.findById(req.params.id);
@@ -91,11 +74,6 @@ const rejectRequest = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Assign a technician
-// @route PATCH /api/maintenance/:id/assign
-// @access Asset Manager / Admin
-// ─────────────────────────────────────────
 const assignTechnician = async (req, res) => {
   try {
     const maint = await Maintenance.findById(req.params.id);
@@ -117,11 +95,6 @@ const assignTechnician = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Mark work as In Progress
-// @route PATCH /api/maintenance/:id/start
-// @access Asset Manager / Admin
-// ─────────────────────────────────────────
 const startWork = async (req, res) => {
   try {
     const maint = await Maintenance.findById(req.params.id);
@@ -138,12 +111,6 @@ const startWork = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Resolve a maintenance request
-//        Asset status → Available
-// @route PATCH /api/maintenance/:id/resolve
-// @access Asset Manager / Admin
-// ─────────────────────────────────────────
 const resolveRequest = async (req, res) => {
   try {
     const maint = await Maintenance.findById(req.params.id).populate("asset");
@@ -156,7 +123,6 @@ const resolveRequest = async (req, res) => {
     maint.resolutionNotes = req.body.resolutionNotes || "";
     await maint.save();
 
-    // Return asset to Available
     await Asset.findByIdAndUpdate(maint.asset._id || maint.asset, {
       status:    "Available",
       condition: req.body.postRepairCondition || undefined,
@@ -174,11 +140,6 @@ const resolveRequest = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Get all maintenance requests
-// @route GET /api/maintenance?status=&priority=&asset=
-// @access Admin / Asset Manager
-// ─────────────────────────────────────────
 const getAllRequests = async (req, res) => {
   try {
     const filter = {};
@@ -200,11 +161,6 @@ const getAllRequests = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Get current user's maintenance requests
-// @route GET /api/maintenance/mine
-// @access All authenticated
-// ─────────────────────────────────────────
 const getMyRequests = async (req, res) => {
   try {
     const requests = await Maintenance.find({ requestedBy: req.user._id })

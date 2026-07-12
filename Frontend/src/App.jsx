@@ -3,15 +3,13 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   LayoutDashboard, Users, LogOut, PlusCircle, Bookmark, Wrench,
   AlertCircle, ShieldAlert, CheckCircle, Clock, Calendar,
-  ArrowLeftRight, User, Mail, Lock, RefreshCw, Building2,
+  ArrowLeftRight, ArrowRightLeft, User, Mail, Lock, RefreshCw, Building2,
   Tag, Pencil, Trash2, ChevronRight, FolderTree, X,
   Package, CalendarRange, Eye, Upload, FileText, Check, AlertTriangle,
   Info, CalendarDays, ExternalLink
 
 } from 'lucide-react';
 import './App.css';
-import AssetDirectory from './pages/AssetDirectory';
-import AssetAllocation from './pages/AssetAllocation';
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -1738,12 +1736,6 @@ function App() {
               </div>
             )}
           </>
-        )}
-        {activeTab === 'assets' && (
-          <AssetDirectory allAssets={allAssets} />
-        )}
-        {activeTab === 'allocation' && (
-          <AssetAllocation allAssets={allAssets} employees={directoryUsers} />
         )}
       </main>
 
