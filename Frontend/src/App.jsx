@@ -20,6 +20,7 @@ import {
   RefreshCw 
 } from 'lucide-react';
 import './App.css';
+import AssetDirectory from './pages/AssetDirectory';
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -671,6 +672,13 @@ function App() {
                 <span>Employee Directory</span>
               </button>
             )}
+            <button 
+  className={`nav-item ${activeTab === 'assets' ? 'active' : ''}`}
+  onClick={() => setActiveTab('assets')}
+>
+  <Package size={18} />
+  <span>Asset Directory</span>
+</button>
           </nav>
         </div>
 
@@ -948,6 +956,9 @@ function App() {
             </div>
           </div>
         )}
+        {activeTab === 'assets' && (
+  <AssetDirectory allAssets={allAssets} />
+)}
       </main>
 
       {/* MODAL 1: REGISTER ASSET */}
