@@ -6,12 +6,10 @@ const {
 } = require("../controllers/allocationController");
 const { protect, managerOrAdmin } = require("../middleware/authMiddleware");
 
-// Allocation routes
 router.get("/",                protect, managerOrAdmin, getAllocations);
 router.post("/",               protect, managerOrAdmin, allocateAsset);
 router.patch("/:id/return",    protect, managerOrAdmin, returnAsset);
 
-// Transfer routes
 router.post("/transfer-request",           protect, requestTransfer);
 router.get("/transfers",                   protect, managerOrAdmin, getAllTransfers);
 router.patch("/transfers/:id/approve",     protect, managerOrAdmin, approveTransfer);

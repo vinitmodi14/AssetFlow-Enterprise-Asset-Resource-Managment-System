@@ -12,11 +12,9 @@ const {
 } = require("../controllers/organizationController");
 const { protect, adminOnly } = require("../middleware/authMiddleware");
 
-// Read routes accessible to all authenticated users
 router.get("/departments", protect, getDepartments);
 router.get("/categories", protect, getCategories);
 
-// Write routes require Admin role
 router.post("/departments", protect, adminOnly, createDepartment);
 router.patch("/departments/:id", protect, adminOnly, updateDepartment);
 router.delete("/departments/:id", protect, adminOnly, deactivateDepartment);
