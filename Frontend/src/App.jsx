@@ -1,3 +1,5 @@
+// TODO: Replace with actual app routing and pages (Login, Register, Dashboard).
+
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
