@@ -13,10 +13,11 @@ const assetSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
+    // Upgraded from plain String to ObjectId reference
     category: {
-      type: String,
-      required: true,
-      trim: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "AssetCategory",
+      default: null,
     },
     status: {
       type: String,
@@ -28,9 +29,11 @@ const assetSchema = new mongoose.Schema(
       ref: "User",
       default: null,
     },
+    // Upgraded from plain String to ObjectId reference
     department: {
-      type: String,
-      default: "General",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Department",
+      default: null,
     },
     expectedReturnDate: {
       type: Date,
@@ -40,10 +43,14 @@ const assetSchema = new mongoose.Schema(
       type: String,
       default: "Good",
     },
+    // Stores values for category-specific custom fields
+    customFieldValues: {
+      type: Map,
+      of: mongoose.Schema.Types.Mixed,
+      default: {},
+    },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model("Asset", assetSchema);
