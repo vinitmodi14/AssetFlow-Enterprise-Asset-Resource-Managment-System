@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// Dedicated allocation record — forms the per-asset allocation history
 const allocationSchema = new mongoose.Schema(
   {
     asset: {

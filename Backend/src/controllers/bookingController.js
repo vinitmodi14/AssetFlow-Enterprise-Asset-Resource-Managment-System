@@ -2,11 +2,6 @@ const Booking = require("../models/Booking");
 const Asset   = require("../models/Asset");
 const { createBookingSchema } = require("../utils/validation");
 
-// ─────────────────────────────────────────
-// @desc  Get all bookable assets
-// @route GET /api/bookings/bookable
-// @access All authenticated
-// ─────────────────────────────────────────
 const getBookableAssets = async (req, res) => {
   try {
     const assets = await Asset.find({ isBookable: true, status: { $nin: ["Retired", "Disposed", "Lost"] } })
@@ -20,11 +15,6 @@ const getBookableAssets = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Get all bookings for a specific asset (calendar data)
-// @route GET /api/bookings/asset/:assetId
-// @access All authenticated
-// ─────────────────────────────────────────
 const getAssetBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({
@@ -40,11 +30,6 @@ const getAssetBookings = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Get current user's bookings
-// @route GET /api/bookings/mine
-// @access All authenticated
-// ─────────────────────────────────────────
 const getMyBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({ bookedBy: req.user._id })
@@ -57,11 +42,6 @@ const getMyBookings = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Get all bookings (admin/manager view)
-// @route GET /api/bookings
-// @access Admin / Asset Manager
-// ─────────────────────────────────────────
 const getAllBookings = async (req, res) => {
   try {
     const filter = {};
@@ -79,11 +59,6 @@ const getAllBookings = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Create a booking with overlap validation
-// @route POST /api/bookings
-// @access All authenticated
-// ─────────────────────────────────────────
 const createBooking = async (req, res) => {
   try {
     const result = createBookingSchema.safeParse(req.body);
@@ -99,9 +74,6 @@ const createBooking = async (req, res) => {
     if (!asset)         return res.status(404).json({ message: "Asset not found" });
     if (!asset.isBookable) return res.status(400).json({ message: "This asset is not available for booking" });
 
-    // ── Overlap validation ──
-    // Reject if existing booking overlaps: existing.start < end AND existing.end > start
-    // Equal boundary (start === other.end) is allowed per spec
     const overlap = await Booking.findOne({
       asset:  assetId,
       status: { $in: ["Upcoming", "Ongoing"] },
@@ -140,11 +112,6 @@ const createBooking = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Cancel a booking
-// @route PATCH /api/bookings/:id/cancel
-// @access All authenticated (own bookings) / Admin
-// ─────────────────────────────────────────
 const cancelBooking = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);

@@ -7,31 +7,31 @@ const transferSchema = new mongoose.Schema(
       ref: "Asset",
       required: true,
     },
-    // The active allocation being transferred
+    
     allocation: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Allocation",
       default: null,
     },
-    // Who currently holds the asset (source)
+    
     fromUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    // Who the asset is being transferred to (target)
+    
     toUser: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    // Who raised the transfer request
+    
     requestedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    // Who approved/rejected
+    
     approvedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

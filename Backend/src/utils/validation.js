@@ -1,7 +1,6 @@
 const { z } = require("zod");
 const validator = require("validator");
 
-// Sign Up Schema
 const signupSchema = z.object({
   name: z
     .string()
@@ -20,7 +19,6 @@ const signupSchema = z.object({
   department: z.string().optional().nullable(),
 });
 
-// Login Schema
 const loginSchema = z.object({
   email: z
     .string()
@@ -33,7 +31,6 @@ const loginSchema = z.object({
     .min(1, { message: "Password is required" }),
 });
 
-// Asset Registration Schema
 const assetSchema = z.object({
   name: z
     .string()
@@ -51,7 +48,6 @@ const assetSchema = z.object({
   condition: z.string().optional().default("Good"),
 });
 
-// Booking Schema
 const bookingSchema = z.object({
   assetId: z.string().min(1, { message: "Asset ID is required" }),
   startDate: z.string().refine((val) => !isNaN(Date.parse(val)), {
@@ -69,7 +65,6 @@ const bookingSchema = z.object({
   path: ["endDate"],
 });
 
-// Maintenance Request Schema
 const maintenanceSchema = z.object({
   assetId: z.string().min(1, { message: "Asset ID is required" }),
   type: z.enum(["Routine", "Repair", "Upgrade"]),
@@ -80,7 +75,6 @@ const maintenanceSchema = z.object({
   priority: z.enum(["Low", "Medium", "High"]).default("Medium"),
 });
 
-// Department Schema
 const departmentSchema = z.object({
   name: z
     .string()
@@ -92,7 +86,6 @@ const departmentSchema = z.object({
   status: z.enum(["Active", "Inactive"]).default("Active"),
 });
 
-// Asset Category Schema
 const assetCategorySchema = z.object({
   name: z
     .string()
@@ -112,7 +105,6 @@ const assetCategorySchema = z.object({
   status: z.enum(["Active", "Inactive"]).default("Active"),
 });
 
-// ── Screen 4: Full Asset Registration Schema ──
 const registerAssetSchema = z.object({
   name: z.string().min(1, { message: "Asset name is required" }).trim(),
   serialNumber: z.string().min(1, { message: "Serial number is required" }).trim(),
@@ -128,7 +120,6 @@ const registerAssetSchema = z.object({
   isBookable: z.boolean().default(false),
 });
 
-// ── Screen 5: Allocation Schema ──
 const allocationSchema = z.object({
   assetId: z.string().min(1, { message: "Asset ID is required" }),
   allocatedToUserId: z.string().min(1, { message: "Target user is required" }),
@@ -137,14 +128,12 @@ const allocationSchema = z.object({
   notes: z.string().optional().default(""),
 });
 
-// ── Screen 5: Transfer Request Schema ──
 const transferRequestSchema = z.object({
   assetId: z.string().min(1, { message: "Asset ID is required" }),
   toUserId: z.string().min(1, { message: "Target user is required" }),
   comments: z.string().optional().default(""),
 });
 
-// ── Screen 6: Booking Schema (datetime) ──
 const createBookingSchema = z.object({
   assetId: z.string().min(1, { message: "Asset ID is required" }),
   startTime: z.string().refine((v) => !isNaN(Date.parse(v)), { message: "Invalid start datetime" }),
@@ -155,7 +144,6 @@ const createBookingSchema = z.object({
   path: ["endTime"],
 });
 
-// ── Screen 7: Maintenance Request Schema ──
 const maintenanceRequestSchema = z.object({
   assetId: z.string().min(1, { message: "Asset ID is required" }),
   type: z.enum(["Routine", "Repair", "Upgrade"]),
@@ -172,7 +160,6 @@ module.exports = {
   maintenanceSchema,
   departmentSchema,
   assetCategorySchema,
-  // New schemas for Screens 4-7
   registerAssetSchema,
   allocationSchema,
   transferRequestSchema,

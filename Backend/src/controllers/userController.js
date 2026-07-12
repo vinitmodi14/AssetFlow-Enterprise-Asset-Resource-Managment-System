@@ -1,8 +1,5 @@
 const User = require("../models/User");
 
-// @desc    Get all users (employee directory)
-// @route   GET /api/users
-// @access  Private/Admin
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find({})
@@ -16,9 +13,6 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-// @desc    Update user role (promote/demote) — Admin only via Org Setup Tab C
-// @route   PATCH /api/users/:id/role
-// @access  Private/Admin
 const updateUserRole = async (req, res) => {
   try {
     const { role } = req.body;
@@ -31,7 +25,6 @@ const updateUserRole = async (req, res) => {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Prevent Admin from removing their own admin role
     if (user._id.toString() === req.user._id.toString() && role !== "Admin") {
       return res.status(400).json({ message: "Admin cannot demote themselves" });
     }
@@ -50,9 +43,6 @@ const updateUserRole = async (req, res) => {
   }
 };
 
-// @desc    Update user status (Active / Inactive)
-// @route   PATCH /api/users/:id/status
-// @access  Private/Admin
 const updateUserStatus = async (req, res) => {
   try {
     const { status } = req.body;
@@ -63,7 +53,6 @@ const updateUserStatus = async (req, res) => {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Prevent Admin from deactivating themselves
     if (user._id.toString() === req.user._id.toString() && status === "Inactive") {
       return res.status(400).json({ message: "Admin cannot deactivate their own account" });
     }
@@ -82,9 +71,6 @@ const updateUserStatus = async (req, res) => {
   }
 };
 
-// @desc    Update user department assignment
-// @route   PATCH /api/users/:id/department
-// @access  Private/Admin
 const updateUserDepartment = async (req, res) => {
   try {
     const { departmentId } = req.body;

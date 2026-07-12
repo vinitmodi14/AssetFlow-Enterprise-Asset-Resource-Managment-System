@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-// Protect route - verify JWT
 const protect = async (req, res, next) => {
   let token;
 
@@ -10,13 +9,11 @@ const protect = async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
-      // Get token from header
+   
       token = req.headers.authorization.split(" ")[1];
 
-      // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET || "fallbacksecret123");
 
-      // Get user from token
       req.user = await User.findById(decoded.id).select("-password");
       if (!req.user) {
         return res.status(401).json({ message: "Not authorized, user not found" });
@@ -34,7 +31,6 @@ const protect = async (req, res, next) => {
   }
 };
 
-// Check if user is Admin
 const adminOnly = (req, res, next) => {
   if (req.user && req.user.role === "Admin") {
     next();
@@ -43,7 +39,6 @@ const adminOnly = (req, res, next) => {
   }
 };
 
-// Check if user is Asset Manager or Admin
 const managerOrAdmin = (req, res, next) => {
   if (req.user && (req.user.role === "Admin" || req.user.role === "Asset Manager")) {
     next();
@@ -52,7 +47,6 @@ const managerOrAdmin = (req, res, next) => {
   }
 };
 
-// Check if user is Asset Manager, Department Head, or Admin
 const managerOrDeptHead = (req, res, next) => {
   const allowed = ["Admin", "Asset Manager", "Department Head"];
   if (req.user && allowed.includes(req.user.role)) {

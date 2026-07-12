@@ -10,12 +10,9 @@ const generateToken = (id) => {
   });
 };
 
-// @desc    Register a new user (default role: Employee)
-// @route   POST /api/auth/register
-// @access  Public
 const register = async (req, res) => {
   try {
-    // Validate request body with Zod schema
+   
     const validationResult = signupSchema.safeParse(req.body);
     if (!validationResult.success) {
       const errors = validationResult.error.errors.map((err) => err.message);
@@ -24,19 +21,17 @@ const register = async (req, res) => {
 
     const { name, email, password, department } = validationResult.data;
 
-    // Check if user already exists
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ message: "User already exists with this email address" });
     }
 
-    // Create user (defaults to Employee role)
     const user = await User.create({
       name,
       email,
       password,
       department,
-      role: "Employee", // Strict enforcement: only Employee on signup
+      role: "Employee", 
     });
 
     if (user) {
@@ -57,12 +52,8 @@ const register = async (req, res) => {
   }
 };
 
-// @desc    Authenticate user & get token
-// @route   POST /api/auth/login
-// @access  Public
 const login = async (req, res) => {
   try {
-    // Validate request body
     const validationResult = loginSchema.safeParse(req.body);
     if (!validationResult.success) {
       const errors = validationResult.error.errors.map((err) => err.message);
@@ -71,13 +62,11 @@ const login = async (req, res) => {
 
     const { email, password } = validationResult.data;
 
-    // Find user
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Verify password
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid email or password" });
@@ -97,9 +86,6 @@ const login = async (req, res) => {
   }
 };
 
-// @desc    Get current user profile
-// @route   GET /api/auth/me
-// @access  Private
 const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
@@ -113,9 +99,6 @@ const getMe = async (req, res) => {
   }
 };
 
-// @desc    Forgot password (mocked)
-// @route   POST /api/auth/forgot-password
-// @access  Public
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -126,13 +109,11 @@ const forgotPassword = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      // Return 200 even if user not found for security, but make it realistic
       return res.json({
         message: "If that email address exists, instructions to reset your password have been sent.",
       });
     }
 
-    // Return mock success
     return res.json({
       message: `Password reset instructions have been sent successfully to ${email}.`,
     });
