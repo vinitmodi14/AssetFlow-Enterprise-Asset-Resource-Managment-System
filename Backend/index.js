@@ -16,13 +16,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Test route
-app.get("/", (req, res) => {
-  res.json({ message: "AssetFlow API is running 🚀" });
-});
-
-// Routes will be added here
-// app.use("/api/users", require("./src/routes/userRoutes"));
+// Routes
+app.use("/api/auth", require("./src/routes/authRoutes"));
+app.use("/api/users", require("./src/routes/userRoutes"));
+app.use("/api/dashboard", require("./src/routes/dashboardRoutes"));
 
 const PORT = process.env.PORT || 5000;
 
