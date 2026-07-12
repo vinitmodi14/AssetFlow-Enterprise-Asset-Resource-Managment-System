@@ -5,10 +5,11 @@ import {
   ArrowLeftRight, User, Mail, Lock, RefreshCw, Building2,
   Tag, Pencil, Trash2, ChevronRight, FolderTree, X,
   Package, CalendarRange, Eye, Upload, FileText, Check, AlertTriangle,
-  Info, CalendarDays, ExternalLink
+  Info, CalendarDays, ExternalLink, ClipboardCheck
 } from 'lucide-react';
 import './App.css';
 import AssetDirectory from './pages/AssetDirectory';
+import AssetAudit from './pages/AssetAudit';
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -1022,6 +1023,9 @@ function App() {
             <button className={`nav-item ${activeTab==='maintenance' ? 'active' : ''}`} onClick={()=>setActiveTab('maintenance')}>
               <Wrench size={18}/><span>Maintenance</span>
             </button>
+            <button className={`nav-item ${activeTab==='audit' ? 'active' : ''}`} onClick={()=>setActiveTab('audit')}>
+              <ClipboardCheck size={18}/><span>Asset Audits</span>
+            </button>
             {currentUser.role === 'Admin' && (
               <button className={`nav-item ${activeTab==='orgSetup' ? 'active' : ''}`} onClick={()=>setActiveTab('orgSetup')}>
                 <Building2 size={18}/><span>Organization Setup</span>
@@ -1052,6 +1056,7 @@ function App() {
               {activeTab === 'allocation' && 'Asset Allocations & Transfers'}
               {activeTab === 'booking' && 'Resource Bookings'}
               {activeTab === 'maintenance' && 'Maintenance Center'}
+              {activeTab === 'audit' && 'Asset Audits'}
               {activeTab === 'orgSetup' && 'Organization Setup'}
             </h1>
             <p className="header-meta">Logged in as <strong style={{color:'var(--text-title)'}}>{currentUser.name}</strong> · {currentUser.role}</p>
@@ -1730,8 +1735,16 @@ function App() {
           </>
         )}
         {activeTab === 'assets' && (
-  <AssetDirectory allAssets={allAssets} />
-)}
+          <AssetDirectory allAssets={allAssets} />
+        )}
+        {activeTab === 'audit' && (
+          <AssetAudit 
+            token={token} 
+            currentUser={currentUser} 
+            departments={departments}
+            directoryUsers={directoryUsers} 
+          />
+        )}
       </main>
 
       {/* ══════════ DETAIL DRAWER ══════════ */}
