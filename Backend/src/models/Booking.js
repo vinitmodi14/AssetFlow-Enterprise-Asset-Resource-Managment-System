@@ -12,7 +12,7 @@ const bookingSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    // Full datetime (date + time combined) for overlap validation
+    
     startTime: {
       type: Date,
       required: true,
@@ -44,7 +44,6 @@ const bookingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Compound index for fast overlap queries
 bookingSchema.index({ asset: 1, startTime: 1, endTime: 1 });
 bookingSchema.index({ bookedBy: 1, status: 1 });
 

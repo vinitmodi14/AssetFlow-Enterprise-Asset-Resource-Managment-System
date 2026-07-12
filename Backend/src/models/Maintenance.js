@@ -27,13 +27,13 @@ const maintenanceSchema = new mongoose.Schema(
       enum: ["Low", "Medium", "High"],
       default: "Medium",
     },
-    // Full 6-stage workflow
+    
     status: {
       type: String,
       enum: ["Pending", "Approved", "Rejected", "Technician Assigned", "In Progress", "Resolved"],
       default: "Pending",
     },
-    // Manager who approved/rejected
+    
     approvedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -44,7 +44,7 @@ const maintenanceSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
-    // Technician can be internal User or external free-text
+   
     assignedTechnicianName: {
       type: String,
       trim: true,
@@ -68,7 +68,7 @@ const maintenanceSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
-    // Base64 photo of the issue
+   
     photoUrl: {
       type: String,
       default: "",
