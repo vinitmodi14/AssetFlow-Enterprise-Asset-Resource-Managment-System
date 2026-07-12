@@ -3,11 +3,6 @@ const Allocation = require("../models/Allocation");
 const Transfer   = require("../models/Transfer");
 const { allocationSchema, transferRequestSchema } = require("../utils/validation");
 
-// ─────────────────────────────────────────
-// @desc  Allocate asset to user
-// @route POST /api/allocations
-// @access Admin / Asset Manager
-// ─────────────────────────────────────────
 const allocateAsset = async (req, res) => {
   try {
     const result = allocationSchema.safeParse(req.body);
@@ -19,7 +14,6 @@ const allocateAsset = async (req, res) => {
     const asset = await Asset.findById(assetId).populate("currentHolder", "name email");
     if (!asset) return res.status(404).json({ message: "Asset not found" });
 
-    // ── Conflict rule ──
     if (asset.status !== "Available") {
       return res.status(409).json({
         message: `Asset is currently ${asset.status}`,
@@ -30,7 +24,6 @@ const allocateAsset = async (req, res) => {
       });
     }
 
-    // Create allocation record
     const allocation = await Allocation.create({
       asset:              assetId,
       allocatedTo:        allocatedToUserId,
@@ -42,7 +35,6 @@ const allocateAsset = async (req, res) => {
       status:             "Active",
     });
 
-    // Update asset document
     asset.status            = "Allocated";
     asset.currentHolder     = allocatedToUserId;
     asset.expectedReturnDate = expectedReturnDate ? new Date(expectedReturnDate) : null;
@@ -60,11 +52,6 @@ const allocateAsset = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Return an allocated asset
-// @route PATCH /api/allocations/:id/return
-// @access Admin / Asset Manager
-// ─────────────────────────────────────────
 const returnAsset = async (req, res) => {
   try {
     const allocation = await Allocation.findById(req.params.id).populate("asset");
@@ -79,7 +66,6 @@ const returnAsset = async (req, res) => {
     allocation.returnConditionNotes = returnConditionNotes || "";
     await allocation.save();
 
-    // Revert asset to Available
     const asset = await Asset.findById(allocation.asset._id || allocation.asset);
     if (asset) {
       asset.status             = "Available";
@@ -96,11 +82,6 @@ const returnAsset = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  List all allocations (with overdue flag)
-// @route GET /api/allocations?status=Active
-// @access Admin / Asset Manager
-// ─────────────────────────────────────────
 const getAllocations = async (req, res) => {
   try {
     const filter = {};
@@ -113,7 +94,6 @@ const getAllocations = async (req, res) => {
       .populate("department",  "name")
       .sort({ createdAt: -1 });
 
-    // Tag overdue
     const now = new Date();
     const enriched = allocations.map((a) => {
       const obj = a.toObject();
@@ -128,11 +108,6 @@ const getAllocations = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Request a transfer (when asset is already allocated to someone else)
-// @route POST /api/allocations/transfer-request
-// @access All authenticated
-// ─────────────────────────────────────────
 const requestTransfer = async (req, res) => {
   try {
     const result = transferRequestSchema.safeParse(req.body);
@@ -146,7 +121,6 @@ const requestTransfer = async (req, res) => {
     if (asset.status !== "Allocated")
       return res.status(400).json({ message: "Transfer requests are only for currently allocated assets" });
 
-    // Find the active allocation
     const activeAllocation = await Allocation.findOne({ asset: assetId, status: "Active" });
 
     const transfer = await Transfer.create({
@@ -172,11 +146,6 @@ const requestTransfer = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Approve a transfer request
-// @route PATCH /api/allocations/transfers/:id/approve
-// @access Asset Manager / Department Head
-// ─────────────────────────────────────────
 const approveTransfer = async (req, res) => {
   try {
     const transfer = await Transfer.findById(req.params.id)
@@ -187,7 +156,6 @@ const approveTransfer = async (req, res) => {
     if (transfer.status !== "Requested")
       return res.status(400).json({ message: "Transfer is not in Requested state" });
 
-    // Close old allocation
     if (transfer.allocation) {
       const oldAlloc = await Allocation.findById(transfer.allocation._id || transfer.allocation);
       if (oldAlloc) {
@@ -197,7 +165,6 @@ const approveTransfer = async (req, res) => {
       }
     }
 
-    // Create new allocation for the target user
     const newAllocation = await Allocation.create({
       asset:       transfer.asset._id,
       allocatedTo: transfer.toUser,
@@ -206,14 +173,12 @@ const approveTransfer = async (req, res) => {
       status:      "Active",
     });
 
-    // Update asset holder
     const asset = await Asset.findById(transfer.asset._id);
     if (asset) {
       asset.currentHolder = transfer.toUser;
       await asset.save();
     }
 
-    // Finalize transfer record
     transfer.status      = "Completed";
     transfer.approvedBy  = req.user._id;
     transfer.approvalDate = new Date();
@@ -226,11 +191,6 @@ const approveTransfer = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Reject a transfer request
-// @route PATCH /api/allocations/transfers/:id/reject
-// @access Asset Manager / Department Head
-// ─────────────────────────────────────────
 const rejectTransfer = async (req, res) => {
   try {
     const transfer = await Transfer.findById(req.params.id);
@@ -251,11 +211,6 @@ const rejectTransfer = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Get all transfer requests
-// @route GET /api/allocations/transfers
-// @access Admin / Manager / Dept Head
-// ─────────────────────────────────────────
 const getAllTransfers = async (req, res) => {
   try {
     const filter = {};

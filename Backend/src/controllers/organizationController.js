@@ -2,13 +2,6 @@ const Department = require("../models/Department");
 const AssetCategory = require("../models/AssetCategory");
 const { departmentSchema, assetCategorySchema } = require("../utils/validation");
 
-// ─────────────────────────────────────────
-//  DEPARTMENT CONTROLLERS
-// ─────────────────────────────────────────
-
-// @desc  Get all departments
-// @route GET /api/org/departments
-// @access Private/Admin
 const getDepartments = async (req, res) => {
   try {
     const departments = await Department.find({})
@@ -22,9 +15,6 @@ const getDepartments = async (req, res) => {
   }
 };
 
-// @desc  Create a department
-// @route POST /api/org/departments
-// @access Private/Admin
 const createDepartment = async (req, res) => {
   try {
     const result = departmentSchema.safeParse(req.body);
@@ -59,9 +49,6 @@ const createDepartment = async (req, res) => {
   }
 };
 
-// @desc  Update a department
-// @route PATCH /api/org/departments/:id
-// @access Private/Admin
 const updateDepartment = async (req, res) => {
   try {
     const result = departmentSchema.partial().safeParse(req.body);
@@ -75,7 +62,6 @@ const updateDepartment = async (req, res) => {
 
     const { name, description, head, parentDept, status } = result.data;
 
-    // Check name uniqueness if changing it
     if (name && name !== dept.name) {
       const nameConflict = await Department.findOne({ name: name.trim() });
       if (nameConflict) {
@@ -102,9 +88,6 @@ const updateDepartment = async (req, res) => {
   }
 };
 
-// @desc  Deactivate a department (soft delete)
-// @route DELETE /api/org/departments/:id
-// @access Private/Admin
 const deactivateDepartment = async (req, res) => {
   try {
     const dept = await Department.findById(req.params.id);
@@ -120,13 +103,6 @@ const deactivateDepartment = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-//  ASSET CATEGORY CONTROLLERS
-// ─────────────────────────────────────────
-
-// @desc  Get all asset categories
-// @route GET /api/org/categories
-// @access Private/Admin
 const getCategories = async (req, res) => {
   try {
     const categories = await AssetCategory.find({}).sort({ name: 1 });
@@ -137,9 +113,6 @@ const getCategories = async (req, res) => {
   }
 };
 
-// @desc  Create an asset category
-// @route POST /api/org/categories
-// @access Private/Admin
 const createCategory = async (req, res) => {
   try {
     const result = assetCategorySchema.safeParse(req.body);
@@ -163,9 +136,6 @@ const createCategory = async (req, res) => {
   }
 };
 
-// @desc  Update an asset category
-// @route PATCH /api/org/categories/:id
-// @access Private/Admin
 const updateCategory = async (req, res) => {
   try {
     const result = assetCategorySchema.partial().safeParse(req.body);
@@ -199,9 +169,6 @@ const updateCategory = async (req, res) => {
   }
 };
 
-// @desc  Deactivate an asset category (soft delete)
-// @route DELETE /api/org/categories/:id
-// @access Private/Admin
 const deactivateCategory = async (req, res) => {
   try {
     const category = await AssetCategory.findById(req.params.id);

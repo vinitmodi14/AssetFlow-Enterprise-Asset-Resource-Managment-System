@@ -4,7 +4,6 @@ const Allocation   = require("../models/Allocation");
 const Maintenance  = require("../models/Maintenance");
 const { registerAssetSchema } = require("../utils/validation");
 
-// ── Auto-generate asset tag (AF-0001, AF-0002 …) ──
 const generateAssetTag = async () => {
   const counter = await Counter.findOneAndUpdate(
     { name: "assetTag" },
@@ -14,11 +13,6 @@ const generateAssetTag = async () => {
   return `AF-${String(counter.seq).padStart(4, "0")}`;
 };
 
-// ─────────────────────────────────────────
-// @desc  Register a new asset
-// @route POST /api/assets
-// @access Admin / Asset Manager
-// ─────────────────────────────────────────
 const registerAsset = async (req, res) => {
   try {
     const result = registerAssetSchema.safeParse(req.body);
@@ -59,11 +53,6 @@ const registerAsset = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  List / search assets
-// @route GET /api/assets?tag=&serial=&category=&status=&department=&location=&bookable=
-// @access All authenticated
-// ─────────────────────────────────────────
 const getAllAssets = async (req, res) => {
   try {
     const { tag, serial, category, status, department, location, bookable, q } = req.query;
@@ -96,11 +85,6 @@ const getAllAssets = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Get single asset with full history
-// @route GET /api/assets/:id
-// @access All authenticated
-// ─────────────────────────────────────────
 const getAssetById = async (req, res) => {
   try {
     const asset = await Asset.findById(req.params.id)
@@ -116,11 +100,6 @@ const getAssetById = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Update asset metadata
-// @route PATCH /api/assets/:id
-// @access Admin / Asset Manager
-// ─────────────────────────────────────────
 const updateAsset = async (req, res) => {
   try {
     const allowed = ["name","condition","location","isBookable","status","department","category",
@@ -143,11 +122,6 @@ const updateAsset = async (req, res) => {
   }
 };
 
-// ─────────────────────────────────────────
-// @desc  Get allocation + maintenance history for an asset
-// @route GET /api/assets/:id/history
-// @access All authenticated
-// ─────────────────────────────────────────
 const getAssetHistory = async (req, res) => {
   try {
     const assetId = req.params.id;
