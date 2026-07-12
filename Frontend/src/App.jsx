@@ -8,6 +8,7 @@ import {
   Info, CalendarDays, ExternalLink
 } from 'lucide-react';
 import './App.css';
+import AssetDirectory from './pages/AssetDirectory';
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -1026,6 +1027,13 @@ function App() {
                 <Building2 size={18}/><span>Organization Setup</span>
               </button>
             )}
+            <button 
+  className={`nav-item ${activeTab === 'assets' ? 'active' : ''}`}
+  onClick={() => setActiveTab('assets')}
+>
+  <Package size={18} />
+  <span>Asset Directory</span>
+</button>
           </nav>
         </div>
 
@@ -1721,6 +1729,9 @@ function App() {
             )}
           </>
         )}
+        {activeTab === 'assets' && (
+  <AssetDirectory allAssets={allAssets} />
+)}
       </main>
 
       {/* ══════════ DETAIL DRAWER ══════════ */}
