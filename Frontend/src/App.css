@@ -1126,4 +1126,131 @@ tr.overdue-row { background:rgba(239,68,68,0.04); }
 .bookable-card h4 { font-size:14px; font-weight:600; color:var(--text-title); margin-bottom:4px; }
 .bookable-card p  { font-size:12px; color:var(--text-muted); }
 
+/* ===========================
+   Activity Logs & Notifications
+=========================== */
 
+.notification-list{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    margin-top:20px;
+}
+
+.notification-card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    background:#fff;
+    transition:.25s;
+}
+
+.notification-card:hover{
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    transform:translateY(-2px);
+}
+
+.notification-icon{
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-right:16px;
+}
+
+.notification-content{
+    flex:1;
+}
+
+.notification-content h4{
+    margin:0;
+    font-size:16px;
+    font-weight:600;
+}
+
+.notification-content p{
+    margin-top:5px;
+    color:#6b7280;
+}
+
+.notification-time{
+    font-size:13px;
+    color:#9ca3af;
+    white-space:nowrap;
+}
+
+.role-badge{
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+}
+
+.role-badge.admin{
+    background:#dbeafe;
+    color:#1d4ed8;
+}
+
+.role-badge.manager{
+    background:#dcfce7;
+    color:#15803d;
+}
+
+.role-badge.employee{
+    background:#fef3c7;
+    color:#b45309;
+}
+
+.directory-table tbody tr {
+    transition: all .25s ease;
+}
+
+.directory-table tbody tr:hover {
+    background: rgba(99,102,241,.05);
+}
+
+.notification-card {
+    transition: all .25s ease;
+}
+
+.notification-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+}
+
+.btn-secondary.active {
+  background: #4f46e5;
+  color: white;
+  border-color: #4f46e5;
+}
+
+.notification-card{
+
+    animation:slideIn .35s ease;
+
+}
+
+@keyframes slideIn{
+
+from{
+
+opacity:0;
+
+transform:translateX(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateX(0);
+
+}
+
+}

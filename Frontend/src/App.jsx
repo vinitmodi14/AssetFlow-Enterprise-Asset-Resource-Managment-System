@@ -6,16 +6,13 @@ import {
   ArrowLeftRight, ArrowRightLeft, User, Mail, Lock, RefreshCw, Building2,
   Tag, Pencil, Trash2, ChevronRight, FolderTree, X,
   Package, CalendarRange, Eye, Upload, FileText, Check, AlertTriangle,
-<<<<<<< HEAD
   Info, CalendarDays, ExternalLink, ClipboardCheck, BarChart2
-=======
-Info, CalendarDays, ExternalLink, BarChart3, ClipboardCheck
->>>>>>> f2606f93f6f046a8b2bdaa6657c2a401869dffc1
 } from 'lucide-react';
 import './App.css';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import AssetAudit from './pages/AssetAudit';
 import AssetAnalytics from './pages/AssetAnalytics';
+import ActivityLogs from './pages/ActivityLogs';
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -31,47 +28,47 @@ const apiFetch = (url, token, opts = {}) =>
   });
 
 const BLANK_DEPT = { name: '', description: '', head: '', parentDept: '', status: 'Active' };
-const BLANK_CAT  = { name: '', description: '', customFields: [], status: 'Active' };
+const BLANK_CAT = { name: '', description: '', customFields: [], status: 'Active' };
 const BLANK_FIELD = { fieldName: '', fieldType: 'text', required: false };
 
 function App() {
   /* ── Auth State ── */
-  const [token, setToken]           = useState(localStorage.getItem('token') || '');
+  const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [currentUser, setCurrentUser] = useState(() => {
     const s = localStorage.getItem('user');
     return s ? JSON.parse(s) : null;
   });
 
   /* ── Navigation / UI State ── */
-  const [activeTab, setActiveTab]   = useState('dashboard');
-  const [authMode, setAuthMode]     = useState('login'); // login | signup | forgot
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [authMode, setAuthMode] = useState('login'); // login | signup | forgot
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [loading, setLoading]       = useState(false);
+  const [loading, setLoading] = useState(false);
 
   /* ── Org Setup State (Tab A / B / C) ── */
-  const [orgTab, setOrgTab]         = useState('departments'); // departments | categories | employees
+  const [orgTab, setOrgTab] = useState('departments'); // departments | categories | employees
   const [departments, setDepartments] = useState([]);
   const [categories, setCategories] = useState([]);
   const [directoryUsers, setDirectoryUsers] = useState([]);
 
   /* ── Org Setup Modals & Forms ── */
-  const [deptForm, setDeptForm]     = useState(BLANK_DEPT);
+  const [deptForm, setDeptForm] = useState(BLANK_DEPT);
   const [editingDept, setEditingDept] = useState(null);
   const [showDeptModal, setShowDeptModal] = useState(false);
 
-  const [catForm, setCatForm]       = useState(BLANK_CAT);
+  const [catForm, setCatForm] = useState(BLANK_CAT);
   const [editingCat, setEditingCat] = useState(null);
   const [showCatModal, setShowCatModal] = useState(false);
 
   /* ── Dashboard State ── */
-  const [stats, setStats]           = useState({ availableAssets:0, allocatedAssets:0, maintenanceCount:0, activeBookings:0, pendingTransfers:0, upcomingReturns:0 });
+  const [stats, setStats] = useState({ availableAssets: 0, allocatedAssets: 0, maintenanceCount: 0, activeBookings: 0, pendingTransfers: 0, upcomingReturns: 0 });
   const [overdueReturns, setOverdueReturns] = useState([]);
   const [upcomingReturnsList, setUpcomingReturnsList] = useState([]);
-  const [allAssets, setAllAssets]   = useState([]);
+  const [allAssets, setAllAssets] = useState([]);
 
   /* ── Screen 4: Asset Directory State ── */
-  const [assets, setAssets]         = useState([]);
+  const [assets, setAssets] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
@@ -80,7 +77,7 @@ function App() {
   const [filterBookable, setFilterBookable] = useState('all');
 
   const [selectedAsset, setSelectedAsset] = useState(null);
-  const [assetHistory, setAssetHistory]   = useState({ allocationHistory: [], maintenanceHistory: [] });
+  const [assetHistory, setAssetHistory] = useState({ allocationHistory: [], maintenanceHistory: [] });
   const [activeDrawerTab, setActiveDrawerTab] = useState('details');
 
   const [showRegisterAssetModal, setShowRegisterAssetModal] = useState(false);
@@ -92,7 +89,7 @@ function App() {
 
   /* ── Screen 5: Allocations & Transfers State ── */
   const [allocations, setAllocations] = useState([]);
-  const [transfers, setTransfers]     = useState([]);
+  const [transfers, setTransfers] = useState([]);
   const [showAllocateModal, setShowAllocateModal] = useState(false);
   const [allocateForm, setAllocateForm] = useState({
     assetId: '', allocatedToUserId: '', departmentId: '', expectedReturnDate: '', notes: ''
@@ -101,16 +98,16 @@ function App() {
 
   const [showReturnModal, setShowReturnModal] = useState(false);
   const [returningAllocation, setReturningAllocation] = useState(null);
-  const [returnForm, setReturnForm]   = useState({ returnConditionNotes: '', condition: 'Good' });
+  const [returnForm, setReturnForm] = useState({ returnConditionNotes: '', condition: 'Good' });
   const [transferComment, setTransferComment] = useState('');
 
   /* ── Screen 6: Resource Bookings State ── */
   const [bookableAssets, setBookableAssets] = useState([]);
   const [selectedBookableAsset, setSelectedBookableAsset] = useState(null);
-  const [assetBookings, setAssetBookings]   = useState([]);
-  const [myBookings, setMyBookings]         = useState([]);
+  const [assetBookings, setAssetBookings] = useState([]);
+  const [myBookings, setMyBookings] = useState([]);
   const [showBookingModal, setShowBookingModal] = useState(false);
-  const [bookingForm, setBookingForm]       = useState({
+  const [bookingForm, setBookingForm] = useState({
     startDate: '', startTime: '09:00', endDate: '', endTime: '10:00', purpose: ''
   });
 
@@ -133,7 +130,7 @@ function App() {
   const [rejectReason, setRejectReason] = useState('');
 
   /* ── Auth Forms State ── */
-  const [authForm, setAuthForm]     = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [authForm, setAuthForm] = useState({ name: '', email: '', password: '', confirmPassword: '' });
 
   /* ── Auto-clear Messages ── */
   useEffect(() => {
@@ -145,7 +142,7 @@ function App() {
   /* ── Base stats/metadata fetchers ── */
   const fetchStats = useCallback(async (tk) => {
     try {
-      const res  = await apiFetch('/dashboard/stats', tk || token);
+      const res = await apiFetch('/dashboard/stats', tk || token);
       const data = await res.json();
       if (res.ok) {
         setStats(data.stats);
@@ -158,7 +155,7 @@ function App() {
 
   const fetchDepartments = useCallback(async (tk) => {
     try {
-      const res  = await apiFetch('/org/departments', tk || token);
+      const res = await apiFetch('/org/departments', tk || token);
       const data = await res.json();
       if (res.ok) setDepartments(data);
     } catch (e) { console.error(e); }
@@ -166,7 +163,7 @@ function App() {
 
   const fetchCategories = useCallback(async (tk) => {
     try {
-      const res  = await apiFetch('/org/categories', tk || token);
+      const res = await apiFetch('/org/categories', tk || token);
       const data = await res.json();
       if (res.ok) setCategories(data);
     } catch (e) { console.error(e); }
@@ -174,7 +171,7 @@ function App() {
 
   const fetchDirectory = useCallback(async (tk) => {
     try {
-      const res  = await apiFetch('/users', tk || token);
+      const res = await apiFetch('/users', tk || token);
       const data = await res.json();
       if (res.ok) setDirectoryUsers(data);
     } catch (e) { console.error(e); }
@@ -283,7 +280,7 @@ function App() {
     if (!token) return;
     (async () => {
       try {
-        const res  = await apiFetch('/auth/me', token);
+        const res = await apiFetch('/auth/me', token);
         const data = await res.json();
         if (!res.ok) { handleLogout(); return; }
         setCurrentUser(data);
@@ -313,20 +310,20 @@ function App() {
   const handleLoginSubmit = async (e) => {
     e.preventDefault(); setErrorMessage(''); setLoading(true);
     try {
-      const res  = await fetch(`${API_BASE}/auth/login`, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: authForm.email, password: authForm.password })
       });
       const data = await res.json();
       if (res.ok) {
         setToken(data.token);
-        const u = { _id:data._id, name:data.name, email:data.email, role:data.role, department:data.department };
+        const u = { _id: data._id, name: data.name, email: data.email, role: data.role, department: data.department };
         setCurrentUser(u);
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(u));
         setSuccessMessage('Welcome back!');
-        setAuthForm({ name:'', email:'', password:'', confirmPassword:'' });
+        setAuthForm({ name: '', email: '', password: '', confirmPassword: '' });
       } else setErrorMessage(data.message || 'Invalid credentials.');
     } catch { setErrorMessage('Cannot connect to server.'); }
     finally { setLoading(false); }
@@ -337,20 +334,20 @@ function App() {
     if (authForm.password !== authForm.confirmPassword) { setErrorMessage('Passwords do not match.'); return; }
     setLoading(true);
     try {
-      const res  = await fetch(`${API_BASE}/auth/register`, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ name:authForm.name, email:authForm.email, password:authForm.password })
+      const res = await fetch(`${API_BASE}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: authForm.name, email: authForm.email, password: authForm.password })
       });
       const data = await res.json();
       if (res.ok) {
         setToken(data.token);
-        const u = { _id:data._id, name:data.name, email:data.email, role:data.role, department:data.department };
+        const u = { _id: data._id, name: data.name, email: data.email, role: data.role, department: data.department };
         setCurrentUser(u);
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(u));
         setSuccessMessage('Account created successfully as Employee!');
-        setAuthForm({ name:'', email:'', password:'', confirmPassword:'' });
+        setAuthForm({ name: '', email: '', password: '', confirmPassword: '' });
       } else setErrorMessage(data.message || 'Registration failed.');
     } catch { setErrorMessage('Cannot connect to server.'); }
     finally { setLoading(false); }
@@ -359,9 +356,9 @@ function App() {
   const handleForgotSubmit = async (e) => {
     e.preventDefault(); setErrorMessage(''); setLoading(true);
     try {
-      const res  = await fetch(`${API_BASE}/auth/forgot-password`, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
+      const res = await fetch(`${API_BASE}/auth/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: authForm.email })
       });
       const data = await res.json();
@@ -373,18 +370,18 @@ function App() {
 
   /* ── Department CRUD ── */
   const openCreateDept = () => { setEditingDept(null); setDeptForm(BLANK_DEPT); setShowDeptModal(true); };
-  const openEditDept   = (d) => {
+  const openEditDept = (d) => {
     setEditingDept(d);
-    setDeptForm({ name: d.name, description: d.description||'', head: d.head?._id||'', parentDept: d.parentDept?._id||'', status: d.status });
+    setDeptForm({ name: d.name, description: d.description || '', head: d.head?._id || '', parentDept: d.parentDept?._id || '', status: d.status });
     setShowDeptModal(true);
   };
 
   const handleDeptSubmit = async (e) => {
     e.preventDefault(); setLoading(true); setErrorMessage('');
     const method = editingDept ? 'PATCH' : 'POST';
-    const url    = editingDept ? `/org/departments/${editingDept._id}` : '/org/departments';
+    const url = editingDept ? `/org/departments/${editingDept._id}` : '/org/departments';
     try {
-      const res  = await apiFetch(url, token, { method, body: JSON.stringify(deptForm) });
+      const res = await apiFetch(url, token, { method, body: JSON.stringify(deptForm) });
       const data = await res.json();
       if (res.ok) {
         setSuccessMessage(data.message);
@@ -398,7 +395,7 @@ function App() {
   const handleDeactivateDept = async (id, name) => {
     if (!window.confirm(`Deactivate department "${name}"?`)) return;
     try {
-      const res  = await apiFetch(`/org/departments/${id}`, token, { method: 'DELETE' });
+      const res = await apiFetch(`/org/departments/${id}`, token, { method: 'DELETE' });
       const data = await res.json();
       if (res.ok) { setSuccessMessage(data.message); fetchDepartments(token); }
       else setErrorMessage(data.message);
@@ -408,7 +405,7 @@ function App() {
   const handleDeptStatusToggle = async (dept) => {
     const newStatus = dept.status === 'Active' ? 'Inactive' : 'Active';
     try {
-      const res  = await apiFetch(`/org/departments/${dept._id}`, token, { method:'PATCH', body: JSON.stringify({ status: newStatus }) });
+      const res = await apiFetch(`/org/departments/${dept._id}`, token, { method: 'PATCH', body: JSON.stringify({ status: newStatus }) });
       const data = await res.json();
       if (res.ok) { setSuccessMessage(data.message); fetchDepartments(token); }
       else setErrorMessage(data.message);
@@ -417,18 +414,18 @@ function App() {
 
   /* ── Category CRUD ── */
   const openCreateCat = () => { setEditingCat(null); setCatForm(BLANK_CAT); setShowCatModal(true); };
-  const openEditCat   = (c) => {
+  const openEditCat = (c) => {
     setEditingCat(c);
-    setCatForm({ name: c.name, description: c.description||'', customFields: c.customFields.map(f => ({ ...f })), status: c.status });
+    setCatForm({ name: c.name, description: c.description || '', customFields: c.customFields.map(f => ({ ...f })), status: c.status });
     setShowCatModal(true);
   };
 
   const handleCatSubmit = async (e) => {
     e.preventDefault(); setLoading(true); setErrorMessage('');
     const method = editingCat ? 'PATCH' : 'POST';
-    const url    = editingCat ? `/org/categories/${editingCat._id}` : '/org/categories';
+    const url = editingCat ? `/org/categories/${editingCat._id}` : '/org/categories';
     try {
-      const res  = await apiFetch(url, token, { method, body: JSON.stringify(catForm) });
+      const res = await apiFetch(url, token, { method, body: JSON.stringify(catForm) });
       const data = await res.json();
       if (res.ok) {
         setSuccessMessage(data.message);
@@ -442,14 +439,14 @@ function App() {
   const handleDeactivateCat = async (id, name) => {
     if (!window.confirm(`Deactivate category "${name}"?`)) return;
     try {
-      const res  = await apiFetch(`/org/categories/${id}`, token, { method: 'DELETE' });
+      const res = await apiFetch(`/org/categories/${id}`, token, { method: 'DELETE' });
       const data = await res.json();
       if (res.ok) { setSuccessMessage(data.message); fetchCategories(token); }
       else setErrorMessage(data.message);
     } catch { setErrorMessage('Network error.'); }
   };
 
-  const addCustomField  = () => setCatForm(p => ({ ...p, customFields: [...p.customFields, { ...BLANK_FIELD }] }));
+  const addCustomField = () => setCatForm(p => ({ ...p, customFields: [...p.customFields, { ...BLANK_FIELD }] }));
   const removeCustomField = (i) => setCatForm(p => ({ ...p, customFields: p.customFields.filter((_, idx) => idx !== i) }));
   const updateCustomField = (i, key, val) => setCatForm(p => {
     const fields = [...p.customFields];
@@ -460,7 +457,7 @@ function App() {
   /* ── Directory Operations ── */
   const handleUserRole = async (userId, role) => {
     try {
-      const res  = await apiFetch(`/users/${userId}/role`, token, { method:'PATCH', body: JSON.stringify({ role }) });
+      const res = await apiFetch(`/users/${userId}/role`, token, { method: 'PATCH', body: JSON.stringify({ role }) });
       const data = await res.json();
       if (res.ok) { setSuccessMessage(data.message); fetchDirectory(token); }
       else setErrorMessage(data.message);
@@ -469,7 +466,7 @@ function App() {
 
   const handleUserStatus = async (userId, status) => {
     try {
-      const res  = await apiFetch(`/users/${userId}/status`, token, { method:'PATCH', body: JSON.stringify({ status }) });
+      const res = await apiFetch(`/users/${userId}/status`, token, { method: 'PATCH', body: JSON.stringify({ status }) });
       const data = await res.json();
       if (res.ok) { setSuccessMessage(data.message); fetchDirectory(token); }
       else setErrorMessage(data.message);
@@ -478,7 +475,7 @@ function App() {
 
   const handleUserDept = async (userId, departmentId) => {
     try {
-      const res  = await apiFetch(`/users/${userId}/department`, token, { method:'PATCH', body: JSON.stringify({ departmentId }) });
+      const res = await apiFetch(`/users/${userId}/department`, token, { method: 'PATCH', body: JSON.stringify({ departmentId }) });
       const data = await res.json();
       if (res.ok) { setSuccessMessage(data.message); fetchDirectory(token); }
       else setErrorMessage(data.message);
@@ -579,7 +576,7 @@ function App() {
       if (res.ok) {
         setSuccessMessage(data.message);
         setShowAllocateModal(false);
-        setAllocateForm({ assetId:'', allocatedToUserId:'', departmentId:'', expectedReturnDate:'', notes:'' });
+        setAllocateForm({ assetId: '', allocatedToUserId: '', departmentId: '', expectedReturnDate: '', notes: '' });
         fetchAllocations(token);
         fetchAssets(token);
         fetchStats(token);
@@ -719,7 +716,7 @@ function App() {
       if (res.ok) {
         setSuccessMessage('Booking confirmed!');
         setShowBookingModal(false);
-        setBookingForm({ startDate:'', startTime:'09:00', endDate:'', endTime:'10:00', purpose:'' });
+        setBookingForm({ startDate: '', startTime: '09:00', endDate: '', endTime: '10:00', purpose: '' });
         fetchAssetBookings(selectedBookableAsset._id, token);
         fetchMyBookings(token);
       } else {
@@ -888,7 +885,7 @@ function App() {
 
   /* ── Utilities ── */
   const getDaysOverdue = (d) => Math.ceil((new Date() - new Date(d)) / 86400000);
-  const formatDate     = (d) => d ? new Date(d).toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' }) : 'N/A';
+  const formatDate = (d) => d ? new Date(d).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A';
   const getRoleBadgeClass = (role) => role ? role.toLowerCase().replace(/ /g, '-') : 'employee';
   const getStatusColorClass = (s) => s ? s.toLowerCase().replace(/ /g, '-') : 'available';
 
@@ -900,34 +897,34 @@ function App() {
       <div className="auth-wrapper">
         <div className="auth-container animate-fade-in">
           <div className="auth-logo">
-            <h1 className="logo-text"><RefreshCw size={26} style={{ animationDuration:'3s' }} /> AssetFlow</h1>
+            <h1 className="logo-text"><RefreshCw size={26} style={{ animationDuration: '3s' }} /> AssetFlow</h1>
           </div>
 
-          {errorMessage   && <div className="error-banner"><AlertCircle size={16}/><span>{errorMessage}</span></div>}
-          {successMessage && <div className="success-banner"><CheckCircle size={16}/><span>{successMessage}</span></div>}
+          {errorMessage && <div className="error-banner"><AlertCircle size={16} /><span>{errorMessage}</span></div>}
+          {successMessage && <div className="success-banner"><CheckCircle size={16} /><span>{successMessage}</span></div>}
 
           {authMode === 'login' && (
             <form onSubmit={handleLoginSubmit}>
               <div className="auth-header"><h2>Welcome Back</h2><p>Sign in to your AssetFlow account</p></div>
               <div className="form-group">
                 <label>Email Address</label>
-                <div style={{position:'relative'}}>
-                  <Mail size={16} style={{position:'absolute',left:'12px',top:'13px',color:'var(--text-muted)'}}/>
-                  <input type="email" required placeholder="name@company.com" value={authForm.email} onChange={e=>setAuthForm({...authForm,email:e.target.value})} style={{paddingLeft:'38px',width:'100%'}}/>
+                <div style={{ position: 'relative' }}>
+                  <Mail size={16} style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--text-muted)' }} />
+                  <input type="email" required placeholder="name@company.com" value={authForm.email} onChange={e => setAuthForm({ ...authForm, email: e.target.value })} style={{ paddingLeft: '38px', width: '100%' }} />
                 </div>
               </div>
               <div className="form-group">
                 <label>Password</label>
-                <div style={{position:'relative'}}>
-                  <Lock size={16} style={{position:'absolute',left:'12px',top:'13px',color:'var(--text-muted)'}}/>
-                  <input type="password" required placeholder="••••••••" value={authForm.password} onChange={e=>setAuthForm({...authForm,password:e.target.value})} style={{paddingLeft:'38px',width:'100%'}}/>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={16} style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--text-muted)' }} />
+                  <input type="password" required placeholder="••••••••" value={authForm.password} onChange={e => setAuthForm({ ...authForm, password: e.target.value })} style={{ paddingLeft: '38px', width: '100%' }} />
                 </div>
               </div>
-              <div style={{textAlign:'right',marginBottom:'18px'}}>
-                <button type="button" onClick={()=>setAuthMode('forgot')} style={{background:'none',border:'none',color:'var(--text-muted)',fontSize:'13px'}}>Forgot Password?</button>
+              <div style={{ textAlign: 'right', marginBottom: '18px' }}>
+                <button type="button" onClick={() => setAuthMode('forgot')} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', fontSize: '13px' }}>Forgot Password?</button>
               </div>
               <button type="submit" disabled={loading} className="auth-btn">{loading ? 'Signing in…' : 'Sign In'}</button>
-              <div className="auth-footer">No account? <button type="button" onClick={()=>setAuthMode('signup')}>Sign Up</button></div>
+              <div className="auth-footer">No account? <button type="button" onClick={() => setAuthMode('signup')}>Sign Up</button></div>
             </form>
           )}
 
@@ -936,34 +933,34 @@ function App() {
               <div className="auth-header"><h2>Create Account</h2><p>Register as an Employee — roles assigned by Admin</p></div>
               <div className="form-group">
                 <label>Full Name</label>
-                <div style={{position:'relative'}}>
-                  <User size={16} style={{position:'absolute',left:'12px',top:'13px',color:'var(--text-muted)'}}/>
-                  <input type="text" required placeholder="Jane Doe" value={authForm.name} onChange={e=>setAuthForm({...authForm,name:e.target.value})} style={{paddingLeft:'38px',width:'100%'}}/>
+                <div style={{ position: 'relative' }}>
+                  <User size={16} style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--text-muted)' }} />
+                  <input type="text" required placeholder="Jane Doe" value={authForm.name} onChange={e => setAuthForm({ ...authForm, name: e.target.value })} style={{ paddingLeft: '38px', width: '100%' }} />
                 </div>
               </div>
               <div className="form-group">
                 <label>Email Address</label>
-                <div style={{position:'relative'}}>
-                  <Mail size={16} style={{position:'absolute',left:'12px',top:'13px',color:'var(--text-muted)'}}/>
-                  <input type="email" required placeholder="name@company.com" value={authForm.email} onChange={e=>setAuthForm({...authForm,email:e.target.value})} style={{paddingLeft:'38px',width:'100%'}}/>
+                <div style={{ position: 'relative' }}>
+                  <Mail size={16} style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--text-muted)' }} />
+                  <input type="email" required placeholder="name@company.com" value={authForm.email} onChange={e => setAuthForm({ ...authForm, email: e.target.value })} style={{ paddingLeft: '38px', width: '100%' }} />
                 </div>
               </div>
               <div className="form-group">
                 <label>Password</label>
-                <div style={{position:'relative'}}>
-                  <Lock size={16} style={{position:'absolute',left:'12px',top:'13px',color:'var(--text-muted)'}}/>
-                  <input type="password" required placeholder="Min 6 characters" value={authForm.password} onChange={e=>setAuthForm({...authForm,password:e.target.value})} style={{paddingLeft:'38px',width:'100%'}}/>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={16} style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--text-muted)' }} />
+                  <input type="password" required placeholder="Min 6 characters" value={authForm.password} onChange={e => setAuthForm({ ...authForm, password: e.target.value })} style={{ paddingLeft: '38px', width: '100%' }} />
                 </div>
               </div>
               <div className="form-group">
                 <label>Confirm Password</label>
-                <div style={{position:'relative'}}>
-                  <Lock size={16} style={{position:'absolute',left:'12px',top:'13px',color:'var(--text-muted)'}}/>
-                  <input type="password" required placeholder="Repeat password" value={authForm.confirmPassword} onChange={e=>setAuthForm({...authForm,confirmPassword:e.target.value})} style={{paddingLeft:'38px',width:'100%'}}/>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={16} style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--text-muted)' }} />
+                  <input type="password" required placeholder="Repeat password" value={authForm.confirmPassword} onChange={e => setAuthForm({ ...authForm, confirmPassword: e.target.value })} style={{ paddingLeft: '38px', width: '100%' }} />
                 </div>
               </div>
               <button type="submit" disabled={loading} className="auth-btn">{loading ? 'Creating…' : 'Sign Up'}</button>
-              <div className="auth-footer">Already have an account? <button type="button" onClick={()=>setAuthMode('login')}>Sign In</button></div>
+              <div className="auth-footer">Already have an account? <button type="button" onClick={() => setAuthMode('login')}>Sign In</button></div>
             </form>
           )}
 
@@ -972,13 +969,13 @@ function App() {
               <div className="auth-header"><h2>Reset Password</h2><p>We'll email you reset instructions</p></div>
               <div className="form-group">
                 <label>Registered Email</label>
-                <div style={{position:'relative'}}>
-                  <Mail size={16} style={{position:'absolute',left:'12px',top:'13px',color:'var(--text-muted)'}}/>
-                  <input type="email" required placeholder="name@company.com" value={authForm.email} onChange={e=>setAuthForm({...authForm,email:e.target.value})} style={{paddingLeft:'38px',width:'100%'}}/>
+                <div style={{ position: 'relative' }}>
+                  <Mail size={16} style={{ position: 'absolute', left: '12px', top: '13px', color: 'var(--text-muted)' }} />
+                  <input type="email" required placeholder="name@company.com" value={authForm.email} onChange={e => setAuthForm({ ...authForm, email: e.target.value })} style={{ paddingLeft: '38px', width: '100%' }} />
                 </div>
               </div>
               <button type="submit" disabled={loading} className="auth-btn">{loading ? 'Sending…' : 'Send Reset Link'}</button>
-              <div className="auth-footer"><button type="button" onClick={()=>setAuthMode('login')}>← Back to Login</button></div>
+              <div className="auth-footer"><button type="button" onClick={() => setAuthMode('login')}>← Back to Login</button></div>
             </form>
           )}
         </div>
@@ -999,7 +996,7 @@ function App() {
       <aside className="sidebar">
         <div>
           <div className="sidebar-header">
-            <h2 className="logo-text" style={{fontSize:'22px'}}><RefreshCw size={20}/> AssetFlow</h2>
+            <h2 className="logo-text" style={{ fontSize: '22px' }}><RefreshCw size={20} /> AssetFlow</h2>
           </div>
 
           <div className="sidebar-profile">
@@ -1008,55 +1005,62 @@ function App() {
               <span className="profile-name">{currentUser.name}</span>
               <span className="profile-email">{currentUser.email}</span>
               <span className={`role-badge ${getRoleBadgeClass(currentUser.role)}`}>{currentUser.role}</span>
-            </div>git add Frontend/src/App.jsx
+            </div>
           </div>
 
           <nav className="sidebar-nav">
-            <button 
-  className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
-  onClick={() => setActiveTab('analytics')}
->
-  <BarChart3 size={18} />
-  <span>Analytics</span>
-</button>
-            <button className={`nav-item ${activeTab==='dashboard' ? 'active' : ''}`} onClick={()=>setActiveTab('dashboard')}>
-              <LayoutDashboard size={18}/><span>Dashboard</span>
+            <button
+              className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
+              onClick={() => setActiveTab('analytics')}
+            >
+              <BarChart3 size={18} />
+              <span>Analytics</span>
             </button>
-            <button className={`nav-item ${activeTab==='assets' ? 'active' : ''}`} onClick={()=>setActiveTab('assets')}>
-              <Package size={18}/><span>Asset Directory</span>
+            <button
+              className={`nav-item ${activeTab === "activity" ? "active" : ""}`}
+              onClick={() => setActiveTab("activity")}
+            >
+              <ClipboardCheck size={18} />
+              <span>Activity Logs</span>
+            </button>
+            <button className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
+              <LayoutDashboard size={18} /><span>Dashboard</span>
+            </button>
+            <button className={`nav-item ${activeTab === 'assets' ? 'active' : ''}`} onClick={() => setActiveTab('assets')}>
+              <Package size={18} /><span>Asset Directory</span>
             </button>
             {isApprover && (
-              <button className={`nav-item ${activeTab==='allocation' ? 'active' : ''}`} onClick={()=>setActiveTab('allocation')}>
-                <ArrowLeftRight size={18}/><span>Allocation & Transfers</span>
+              <button className={`nav-item ${activeTab === 'allocation' ? 'active' : ''}`} onClick={() => setActiveTab('allocation')}>
+                <ArrowLeftRight size={18} /><span>Allocation & Transfers</span>
               </button>
             )}
-            <button className={`nav-item ${activeTab==='booking' ? 'active' : ''}`} onClick={()=>setActiveTab('booking')}>
-              <CalendarRange size={18}/><span>Resource Booking</span>
+            <button className={`nav-item ${activeTab === 'booking' ? 'active' : ''}`} onClick={() => setActiveTab('booking')}>
+              <CalendarRange size={18} /><span>Resource Booking</span>
             </button>
-            <button className={`nav-item ${activeTab==='maintenance' ? 'active' : ''}`} onClick={()=>setActiveTab('maintenance')}>
-              <Wrench size={18}/><span>Maintenance</span>
+            <button className={`nav-item ${activeTab === 'maintenance' ? 'active' : ''}`} onClick={() => setActiveTab('maintenance')}>
+              <Wrench size={18} /><span>Maintenance</span>
             </button>
-            <button className={`nav-item ${activeTab==='audit' ? 'active' : ''}`} onClick={()=>setActiveTab('audit')}>
-              <ClipboardCheck size={18}/><span>Asset Audits</span>
+            <button className={`nav-item ${activeTab === 'audit' ? 'active' : ''}`} onClick={() => setActiveTab('audit')}>
+              <ClipboardCheck size={18} /><span>Asset Audits</span>
             </button>
             {(currentUser.role === 'Admin' || currentUser.role === 'Asset Manager') && (
-              <button className={`nav-item ${activeTab==='analytics' ? 'active' : ''}`} onClick={()=>setActiveTab('analytics')}>
-                <BarChart2 size={18}/><span>Analytics & Reports</span>
+              <button className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`} onClick={() => setActiveTab('analytics')}>
+                <BarChart2 size={18} /><span>Analytics & Reports</span>
               </button>
             )}
             {currentUser.role === 'Admin' && (
-              <button className={`nav-item ${activeTab==='orgSetup' ? 'active' : ''}`} onClick={()=>setActiveTab('orgSetup')}>
-                <Building2 size={18}/><span>Organization Setup</span>
+              <button className={`nav-item ${activeTab === 'orgSetup' ? 'active' : ''}`} onClick={() => setActiveTab('orgSetup')}>
+                <Building2 size={18} /><span>Organization Setup</span>
               </button>
             )}
-            <button 
+            <button
               className={`nav-item ${activeTab === 'assets' ? 'active' : ''}`}
               onClick={() => setActiveTab('assets')}
             >
               <Package size={18} />
               <span>Asset Directory</span>
             </button>
-            <button 
+            <button
               className={`nav-item ${activeTab === 'allocation' ? 'active' : ''}`}
               onClick={() => setActiveTab('allocation')}
             >
@@ -1067,7 +1071,7 @@ function App() {
         </div>
 
         <div className="sidebar-footer">
-          <button className="logout-btn" onClick={handleLogout}><LogOut size={18}/><span>Sign Out</span></button>
+          <button className="logout-btn" onClick={handleLogout}><LogOut size={18} /><span>Sign Out</span></button>
         </div>
       </aside>
 
@@ -1084,26 +1088,27 @@ function App() {
               {activeTab === 'audit' && 'Asset Audits'}
               {activeTab === 'analytics' && 'Analytics & Reports'}
               {activeTab === 'orgSetup' && 'Organization Setup'}
+              {activeTab === "activity" && "Activity Logs & Notifications"}
             </h1>
-            <p className="header-meta">Logged in as <strong style={{color:'var(--text-title)'}}>{currentUser.name}</strong> · {currentUser.role}</p>
+            <p className="header-meta">Logged in as <strong style={{ color: 'var(--text-title)' }}>{currentUser.name}</strong> · {currentUser.role}</p>
           </div>
-          <span style={{fontSize:'13px',color:'var(--text-muted)'}}>{new Date().toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric',year:'numeric'})}</span>
+          <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}</span>
         </div>
 
-        {errorMessage   && <div className="error-banner"><AlertCircle size={16}/><span>{errorMessage}</span></div>}
-        {successMessage && <div className="success-banner"><CheckCircle size={16}/><span>{successMessage}</span></div>}
+        {errorMessage && <div className="error-banner"><AlertCircle size={16} /><span>{errorMessage}</span></div>}
+        {successMessage && <div className="success-banner"><CheckCircle size={16} /><span>{successMessage}</span></div>}
 
         {/* ══════════════ DASHBOARD ══════════════ */}
         {activeTab === 'dashboard' && (
           <>
             <div className="kpi-grid">
               {[
-                { cls:'available',   label:'Assets Available',  val: stats.availableAssets,  sub:'In warehouse / ready',    Icon: CheckCircle },
-                { cls:'allocated',   label:'Assets Allocated',  val: stats.allocatedAssets,  sub:'Checked out to staff',    Icon: Clock },
-                { cls:'maintenance', label:'Maintenance Today', val: stats.maintenanceCount,  sub:'Service tickets open',    Icon: Wrench },
-                { cls:'bookings',    label:'Active Bookings',   val: stats.activeBookings,   sub:'Reserved resources',      Icon: Bookmark },
-                { cls:'transfers',   label:'Pending Transfers', val: stats.pendingTransfers, sub:'Awaiting approvals',      Icon: ArrowLeftRight },
-                { cls:'returns',     label:'Upcoming Returns',  val: stats.upcomingReturns,  sub:'Due within 7 days',       Icon: Calendar },
+                { cls: 'available', label: 'Assets Available', val: stats.availableAssets, sub: 'In warehouse / ready', Icon: CheckCircle },
+                { cls: 'allocated', label: 'Assets Allocated', val: stats.allocatedAssets, sub: 'Checked out to staff', Icon: Clock },
+                { cls: 'maintenance', label: 'Maintenance Today', val: stats.maintenanceCount, sub: 'Service tickets open', Icon: Wrench },
+                { cls: 'bookings', label: 'Active Bookings', val: stats.activeBookings, sub: 'Reserved resources', Icon: Bookmark },
+                { cls: 'transfers', label: 'Pending Transfers', val: stats.pendingTransfers, sub: 'Awaiting approvals', Icon: ArrowLeftRight },
+                { cls: 'returns', label: 'Upcoming Returns', val: stats.upcomingReturns, sub: 'Due within 7 days', Icon: Calendar },
               ].map(({ cls, label, val, sub, Icon }) => (
                 <div key={cls} className={`kpi-card ${cls}`}>
                   <div className="kpi-info">
@@ -1111,7 +1116,7 @@ function App() {
                     <div className="kpi-value">{val}</div>
                   </div>
                   <div className="kpi-footer">{sub}</div>
-                  <div className="kpi-icon-wrapper"><Icon size={20}/></div>
+                  <div className="kpi-icon-wrapper"><Icon size={20} /></div>
                 </div>
               ))}
             </div>
@@ -1119,7 +1124,7 @@ function App() {
             {overdueReturns.length > 0 && (
               <div className="overdue-section">
                 <div className="overdue-header">
-                  <ShieldAlert size={20}/>
+                  <ShieldAlert size={20} />
                   <h2>⚠️ Overdue Returns</h2>
                   <span className="overdue-badge">{overdueReturns.length} Overdue</span>
                 </div>
@@ -1131,10 +1136,10 @@ function App() {
                         <div className="overdue-meta">
                           <span>Tag: <code className="asset-tag">{asset.assetTag}</code></span>
                           <span>Holder: <strong>{asset.currentHolder?.name || 'Unknown'}</strong></span>
-                          <span>Expected: <span style={{color:'#fda4af'}}>{formatDate(asset.expectedReturnDate)}</span></span>
+                          <span>Expected: <span style={{ color: '#fda4af' }}>{formatDate(asset.expectedReturnDate)}</span></span>
                         </div>
                       </div>
-                      <div className="overdue-warning-tag"><Clock size={14}/><span>{getDaysOverdue(asset.expectedReturnDate)} Days Overdue</span></div>
+                      <div className="overdue-warning-tag"><Clock size={14} /><span>{getDaysOverdue(asset.expectedReturnDate)} Days Overdue</span></div>
                     </div>
                   ))}
                 </div>
@@ -1145,22 +1150,22 @@ function App() {
               <h2 className="section-title">Quick Actions</h2>
               <div className="actions-grid">
                 {isAdminOrManager ? (
-                  <button className="action-tile" onClick={()=>{ setRegisterAssetForm({ name: '', serialNumber: '', category: '', status: 'Available', department: '', condition: 'Good', location: '', acquisitionDate: '', acquisitionCost: '', isBookable: false, photos: [], documents: [], customFieldValues: {} }); setShowRegisterAssetModal(true); }}>
-                    <div className="action-icon"><PlusCircle size={20}/></div>
+                  <button className="action-tile" onClick={() => { setRegisterAssetForm({ name: '', serialNumber: '', category: '', status: 'Available', department: '', condition: 'Good', location: '', acquisitionDate: '', acquisitionCost: '', isBookable: false, photos: [], documents: [], customFieldValues: {} }); setShowRegisterAssetModal(true); }}>
+                    <div className="action-icon"><PlusCircle size={20} /></div>
                     <div className="action-info"><h4>Register Asset</h4><p>Add to inventory</p></div>
                   </button>
                 ) : (
-                  <div className="action-tile" style={{opacity:.45,cursor:'not-allowed'}}>
-                    <div className="action-icon" style={{background:'#27272a',color:'#71717a'}}><PlusCircle size={20}/></div>
-                    <div className="action-info"><h4>Register Asset</h4><p style={{color:'var(--color-overdue)'}}>Requires Manager+</p></div>
+                  <div className="action-tile" style={{ opacity: .45, cursor: 'not-allowed' }}>
+                    <div className="action-icon" style={{ background: '#27272a', color: '#71717a' }}><PlusCircle size={20} /></div>
+                    <div className="action-info"><h4>Register Asset</h4><p style={{ color: 'var(--color-overdue)' }}>Requires Manager+</p></div>
                   </div>
                 )}
-                <button className="action-tile" onClick={()=>{ setActiveTab('booking'); }}>
-                  <div className="action-icon"><Bookmark size={20}/></div>
+                <button className="action-tile" onClick={() => { setActiveTab('booking'); }}>
+                  <div className="action-icon"><Bookmark size={20} /></div>
                   <div className="action-info"><h4>Book Resource</h4><p>Reserve room or slot</p></div>
                 </button>
-                <button className="action-tile" onClick={()=>{ setMaintForm({ assetId: '', type: 'Repair', description: '', priority: 'Medium', photoUrl: '' }); setShowMaintModal(true); }}>
-                  <div className="action-icon"><Wrench size={20}/></div>
+                <button className="action-tile" onClick={() => { setMaintForm({ assetId: '', type: 'Repair', description: '', priority: 'Medium', photoUrl: '' }); setShowMaintModal(true); }}>
+                  <div className="action-icon"><Wrench size={20} /></div>
                   <div className="action-info"><h4>Raise Maintenance</h4><p>Report hardware issues</p></div>
                 </button>
               </div>
@@ -1169,7 +1174,7 @@ function App() {
             <div className="data-panel">
               <h2 className="section-title">Upcoming Returns (Next 7 Days)</h2>
               {upcomingReturnsList.length === 0
-                ? <p style={{fontSize:'14px',color:'var(--text-muted)'}}>No returns scheduled for the next 7 days.</p>
+                ? <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>No returns scheduled for the next 7 days.</p>
                 : (
                   <div className="directory-table-container">
                     <table className="directory-table">
@@ -1178,10 +1183,10 @@ function App() {
                         {upcomingReturnsList.map(a => (
                           <tr key={a._id}>
                             <td><code className="asset-tag">{a.assetTag}</code></td>
-                            <td style={{color:'var(--text-title)',fontWeight:600}}>{a.name}</td>
+                            <td style={{ color: 'var(--text-title)', fontWeight: 600 }}>{a.name}</td>
                             <td>{a.category?.name || '—'}</td>
                             <td>{a.currentHolder?.name || 'N/A'}</td>
-                            <td style={{color:'var(--color-upcoming)'}}>{formatDate(a.expectedReturnDate)}</td>
+                            <td style={{ color: 'var(--color-upcoming)' }}>{formatDate(a.expectedReturnDate)}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -1197,53 +1202,53 @@ function App() {
           <>
             <div className="search-bar">
               <div className="search-input-wrap">
-                <Users size={16} style={{top:'50%'}}/>
+                <Users size={16} style={{ top: '50%' }} />
                 <input
                   type="text"
                   placeholder="Search by Asset Tag, Serial, Name, QR, or Location..."
                   value={searchQuery}
-                  onChange={e=>setSearchQuery(e.target.value)}
+                  onChange={e => setSearchQuery(e.target.value)}
                 />
               </div>
 
-              <select className="filter-select" value={filterCategory} onChange={e=>setFilterCategory(e.target.value)}>
+              <select className="filter-select" value={filterCategory} onChange={e => setFilterCategory(e.target.value)}>
                 <option value="">All Categories</option>
-                {categories.map(c=><option key={c._id} value={c._id}>{c.name}</option>)}
+                {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
               </select>
 
-              <select className="filter-select" value={filterStatus} onChange={e=>setFilterStatus(e.target.value)}>
+              <select className="filter-select" value={filterStatus} onChange={e => setFilterStatus(e.target.value)}>
                 <option value="">All Statuses</option>
-                {["Available", "Allocated", "Reserved", "Under Maintenance", "Lost", "Retired", "Disposed"].map(s=>(
+                {["Available", "Allocated", "Reserved", "Under Maintenance", "Lost", "Retired", "Disposed"].map(s => (
                   <option key={s} value={s}>{s}</option>
                 ))}
               </select>
 
-              <select className="filter-select" value={filterDepartment} onChange={e=>setFilterDepartment(e.target.value)}>
+              <select className="filter-select" value={filterDepartment} onChange={e => setFilterDepartment(e.target.value)}>
                 <option value="">All Departments</option>
-                {departments.map(d=><option key={d._id} value={d._id}>{d.name}</option>)}
+                {departments.map(d => <option key={d._id} value={d._id}>{d.name}</option>)}
               </select>
 
-              <select className="filter-select" value={filterBookable} onChange={e=>setFilterBookable(e.target.value)}>
+              <select className="filter-select" value={filterBookable} onChange={e => setFilterBookable(e.target.value)}>
                 <option value="all">All Booking States</option>
                 <option value="true">Shared / Bookable Only</option>
               </select>
 
               {isAdminOrManager && (
-                <button className="btn-add" onClick={()=>{ setRegisterAssetForm({ name: '', serialNumber: '', category: '', status: 'Available', department: '', condition: 'Good', location: '', acquisitionDate: '', acquisitionCost: '', isBookable: false, photos: [], documents: [], customFieldValues: {} }); setShowRegisterAssetModal(true); }}>
-                  <PlusCircle size={15}/> Register Asset
+                <button className="btn-add" onClick={() => { setRegisterAssetForm({ name: '', serialNumber: '', category: '', status: 'Available', department: '', condition: 'Good', location: '', acquisitionDate: '', acquisitionCost: '', isBookable: false, photos: [], documents: [], customFieldValues: {} }); setShowRegisterAssetModal(true); }}>
+                  <PlusCircle size={15} /> Register Asset
                 </button>
               )}
             </div>
 
             {assets.length === 0 ? (
               <div className="empty-state">
-                <Package size={40}/>
+                <Package size={40} />
                 <p>No assets found matching filters.</p>
               </div>
             ) : (
               <div className="asset-grid">
                 {assets.map(asset => (
-                  <div className="asset-card animate-fade-in" key={asset._id} onClick={()=>handleOpenAssetDrawer(asset)}>
+                  <div className="asset-card animate-fade-in" key={asset._id} onClick={() => handleOpenAssetDrawer(asset)}>
                     <div className="asset-card-top">
                       <code className="asset-tag">{asset.assetTag}</code>
                       <span className={`asset-status ${getStatusColorClass(asset.status)}`}>{asset.status}</span>
@@ -1266,8 +1271,8 @@ function App() {
         {activeTab === 'allocation' && isApprover && (
           <>
             <div className="screen-tab-strip">
-              <button className={`screen-tab ${orgTab==='departments' ? 'active' : ''}`} onClick={()=>setOrgTab('departments')}>Active Allocations</button>
-              <button className={`screen-tab ${orgTab==='categories' ? 'active' : ''}`} onClick={()=>setOrgTab('categories')}>Transfer Requests</button>
+              <button className={`screen-tab ${orgTab === 'departments' ? 'active' : ''}`} onClick={() => setOrgTab('departments')}>Active Allocations</button>
+              <button className={`screen-tab ${orgTab === 'categories' ? 'active' : ''}`} onClick={() => setOrgTab('categories')}>Transfer Requests</button>
             </div>
 
             {orgTab === 'departments' && (
@@ -1275,7 +1280,7 @@ function App() {
                 <div className="panel-header">
                   <h2>Active Allocations</h2>
                   {isAdminOrManager && (
-                    <button className="btn-add" onClick={()=>{ setAllocateForm({ assetId:'', allocatedToUserId:'', departmentId:'', expectedReturnDate:'', notes:'' }); setConflictError(null); setShowAllocateModal(true); }}><PlusCircle size={15}/> Allocate Asset</button>
+                    <button className="btn-add" onClick={() => { setAllocateForm({ assetId: '', allocatedToUserId: '', departmentId: '', expectedReturnDate: '', notes: '' }); setConflictError(null); setShowAllocateModal(true); }}><PlusCircle size={15} /> Allocate Asset</button>
                   )}
                 </div>
 
@@ -1299,7 +1304,7 @@ function App() {
                         return (
                           <tr key={a._id} className={isOverdue ? 'overdue-row' : ''}>
                             <td><code className="asset-tag">{a.asset?.assetTag}</code></td>
-                            <td style={{fontWeight:600}}>{a.asset?.name}</td>
+                            <td style={{ fontWeight: 600 }}>{a.asset?.name}</td>
                             <td>{a.allocatedTo?.name}</td>
                             <td>{a.department?.name || 'General'}</td>
                             <td>{formatDate(a.startDate)}</td>
@@ -1312,7 +1317,7 @@ function App() {
                             {isAdminOrManager && (
                               <td>
                                 {(a.status === 'Active' || a.status === 'Overdue') && (
-                                  <button className="icon-btn" onClick={()=>{ setReturningAllocation(a); setReturnForm({ returnConditionNotes:'', condition: a.asset?.condition || 'Good' }); setShowReturnModal(true); }}>
+                                  <button className="icon-btn" onClick={() => { setReturningAllocation(a); setReturnForm({ returnConditionNotes: '', condition: a.asset?.condition || 'Good' }); setShowReturnModal(true); }}>
                                     Return Asset
                                   </button>
                                 )}
@@ -1351,22 +1356,22 @@ function App() {
                       {transfers.map(t => (
                         <tr key={t._id}>
                           <td><code className="asset-tag">{t.asset?.assetTag}</code></td>
-                          <td style={{fontWeight:600}}>{t.asset?.name}</td>
+                          <td style={{ fontWeight: 600 }}>{t.asset?.name}</td>
                           <td>{t.fromUser?.name}</td>
                           <td>{t.toUser?.name}</td>
                           <td>{t.requestedBy?.name}</td>
-                          <td style={{maxWidth:'180px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{t.comments || '—'}</td>
+                          <td style={{ maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.comments || '—'}</td>
                           <td>
                             <span className={`asset-status ${getStatusColorClass(t.status)}`}>{t.status}</span>
                           </td>
                           <td>
                             {t.status === 'Requested' ? (
                               <div className="table-actions">
-                                <button className="icon-btn" onClick={()=>handleApproveTransfer(t._id)}><Check size={13}/> Approve</button>
-                                <button className="icon-btn danger" onClick={()=>handleRejectTransferClick(t)}><X size={13}/> Reject</button>
+                                <button className="icon-btn" onClick={() => handleApproveTransfer(t._id)}><Check size={13} /> Approve</button>
+                                <button className="icon-btn danger" onClick={() => handleRejectTransferClick(t)}><X size={13} /> Reject</button>
                               </div>
                             ) : (
-                              <span style={{fontSize:'12px',color:'var(--text-muted)'}}>{t.approvedBy ? `By ${t.approvedBy.name}` : 'Processed'}</span>
+                              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{t.approvedBy ? `By ${t.approvedBy.name}` : 'Processed'}</span>
                             )}
                           </td>
                         </tr>
@@ -1381,16 +1386,16 @@ function App() {
 
         {/* ══════════════ RESOURCE BOOKINGS ══════════════ */}
         {activeTab === 'booking' && (
-          <div style={{display:'grid',gridTemplateColumns:'280px 1fr',gap:'20px'}} className="animate-fade-in">
+          <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: '20px' }} className="animate-fade-in">
             {/* Left list of bookable resources */}
-            <div className="data-panel" style={{margin:0,padding:'16px'}}>
-              <h3 style={{fontSize:'14px',marginBottom:'12px',fontWeight:600,color:'var(--text-title)'}}>Shared Resources</h3>
-              <div style={{display:'flex',flexDirection:'column',gap:'8px'}}>
+            <div className="data-panel" style={{ margin: 0, padding: '16px' }}>
+              <h3 style={{ fontSize: '14px', marginBottom: '12px', fontWeight: 600, color: 'var(--text-title)' }}>Shared Resources</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {bookableAssets.map(ba => (
                   <button
                     key={ba._id}
                     className={`bookable-card ${selectedBookableAsset?._id === ba._id ? 'selected' : ''}`}
-                    onClick={()=>handleSelectBookableAsset(ba)}
+                    onClick={() => handleSelectBookableAsset(ba)}
                   >
                     <h4>{ba.name}</h4>
                     <p>{ba.location || 'No Location'} · Cap: {ba.customFieldValues?.capacity || '—'}</p>
@@ -1400,15 +1405,15 @@ function App() {
             </div>
 
             {/* Right scheduler view */}
-            <div className="data-panel" style={{margin:0}}>
+            <div className="data-panel" style={{ margin: 0 }}>
               {selectedBookableAsset ? (
                 <>
                   <div className="panel-header">
                     <div>
                       <h2>{selectedBookableAsset.name} Booking Schedule</h2>
-                      <p style={{fontSize:'13px',color:'var(--text-muted)',marginTop:'4px'}}>{selectedBookableAsset.location}</p>
+                      <p style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>{selectedBookableAsset.location}</p>
                     </div>
-                    <button className="btn-add" onClick={()=>setShowBookingModal(true)}><CalendarDays size={15}/> Book Time Slot</button>
+                    <button className="btn-add" onClick={() => setShowBookingModal(true)}><CalendarDays size={15} /> Book Time Slot</button>
                   </div>
 
                   <div className="timeline-header">
@@ -1416,7 +1421,7 @@ function App() {
                     {Array.from({ length: 7 }).map((_, idx) => {
                       const day = new Date();
                       day.setDate(day.getDate() + idx);
-                      const formattedDay = day.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' });
+                      const formattedDay = day.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
                       const dayString = day.toISOString().split('T')[0];
 
                       const dayBookings = assetBookings.filter(b => b.startTime.startsWith(dayString));
@@ -1425,13 +1430,13 @@ function App() {
                         <div className="timeline-day-card" key={idx}>
                           <h4>{formattedDay}</h4>
                           {dayBookings.length === 0 ? (
-                            <p style={{fontSize:'12px',color:'var(--text-muted)'}}>No slots reserved</p>
+                            <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>No slots reserved</p>
                           ) : (
                             dayBookings.map(db => (
                               <div key={db._id} className="timeline-slot">
-                                <strong>{new Date(db.startTime).toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'})} - {new Date(db.endTime).toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'})}</strong>
-                                <div style={{fontSize:'11px',opacity:0.9}}>{db.purpose}</div>
-                                <div style={{fontSize:'10px',opacity:0.7,marginTop:'2px'}}>By: {db.bookedBy?.name}</div>
+                                <strong>{new Date(db.startTime).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - {new Date(db.endTime).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</strong>
+                                <div style={{ fontSize: '11px', opacity: 0.9 }}>{db.purpose}</div>
+                                <div style={{ fontSize: '10px', opacity: 0.7, marginTop: '2px' }}>By: {db.bookedBy?.name}</div>
                               </div>
                             ))
                           )}
@@ -1440,9 +1445,9 @@ function App() {
                     })}
                   </div>
 
-                  <div style={{marginTop:'30px'}}>
+                  <div style={{ marginTop: '30px' }}>
                     <h3>My Bookings</h3>
-                    <div className="directory-table-container" style={{marginTop:'10px'}}>
+                    <div className="directory-table-container" style={{ marginTop: '10px' }}>
                       <table className="directory-table">
                         <thead>
                           <tr>
@@ -1456,13 +1461,13 @@ function App() {
                         <tbody>
                           {myBookings.map(mb => (
                             <tr key={mb._id}>
-                              <td style={{fontWeight:600}}>{mb.asset?.name}</td>
-                              <td>{formatDate(mb.startTime)} · {new Date(mb.startTime).toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'})} - {new Date(mb.endTime).toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'})}</td>
+                              <td style={{ fontWeight: 600 }}>{mb.asset?.name}</td>
+                              <td>{formatDate(mb.startTime)} · {new Date(mb.startTime).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })} - {new Date(mb.endTime).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</td>
                               <td>{mb.purpose}</td>
                               <td><span className={`asset-status ${getStatusColorClass(mb.status)}`}>{mb.status}</span></td>
                               <td>
                                 {mb.status === 'Upcoming' && (
-                                  <button className="icon-btn danger" onClick={()=>handleCancelBooking(mb._id)}><X size={12}/> Cancel</button>
+                                  <button className="icon-btn danger" onClick={() => handleCancelBooking(mb._id)}><X size={12} /> Cancel</button>
                                 )}
                               </td>
                             </tr>
@@ -1473,8 +1478,8 @@ function App() {
                   </div>
                 </>
               ) : (
-                <div className="empty-state" style={{padding:'80px 20px'}}>
-                  <CalendarRange size={50}/>
+                <div className="empty-state" style={{ padding: '80px 20px' }}>
+                  <CalendarRange size={50} />
                   <p>Select a bookable resource from the left to view timeline & bookings.</p>
                 </div>
               )}
@@ -1486,17 +1491,17 @@ function App() {
         {activeTab === 'maintenance' && (
           <>
             <div className="screen-tab-strip">
-              <button className={`screen-tab ${orgTab==='departments' ? 'active' : ''}`} onClick={()=>setOrgTab('departments')}>
+              <button className={`screen-tab ${orgTab === 'departments' ? 'active' : ''}`} onClick={() => setOrgTab('departments')}>
                 {isAdminOrManager ? 'All Maintenance Requests' : 'My Requests'}
               </button>
             </div>
 
-            <div style={{marginBottom:'16px',textAlign:'right'}}>
-              <button className="btn-add" onClick={()=>{ setMaintForm({ assetId: '', type: 'Repair', description: '', priority: 'Medium', photoUrl: '' }); setShowMaintModal(true); }}><Wrench size={15}/> Raise Maintenance Request</button>
+            <div style={{ marginBottom: '16px', textAlign: 'right' }}>
+              <button className="btn-add" onClick={() => { setMaintForm({ assetId: '', type: 'Repair', description: '', priority: 'Medium', photoUrl: '' }); setShowMaintModal(true); }}><Wrench size={15} /> Raise Maintenance Request</button>
             </div>
 
             {/* Request Card Grid */}
-            <div style={{display:'flex',flexDirection:'column',gap:'12px'}} className="animate-fade-in">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }} className="animate-fade-in">
               {(isAdminOrManager ? maintenanceRequests : myMaintenanceRequests).map(req => {
                 const stepNames = ["Pending", "Approved", "Technician Assigned", "In Progress", "Resolved"];
                 const currentStepIdx = stepNames.indexOf(req.status);
@@ -1505,17 +1510,17 @@ function App() {
                   <div className="maint-card" key={req._id}>
                     <div className="maint-card-header">
                       <div>
-                        <h4 style={{fontSize:'15px',fontWeight:600,color:'var(--text-title)'}}>{req.asset?.name} <code className="asset-tag">{req.asset?.assetTag}</code></h4>
-                        <p style={{fontSize:'12px',color:'var(--text-muted)',marginTop:'4px'}}>Requested By: {req.requestedBy?.name} · Priority: <span className={`priority-badge ${req.priority.toLowerCase()}`}>{req.priority}</span></p>
+                        <h4 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-title)' }}>{req.asset?.name} <code className="asset-tag">{req.asset?.assetTag}</code></h4>
+                        <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>Requested By: {req.requestedBy?.name} · Priority: <span className={`priority-badge ${req.priority.toLowerCase()}`}>{req.priority}</span></p>
                       </div>
                       <span className={`asset-status ${getStatusColorClass(req.status)}`}>{req.status}</span>
                     </div>
 
-                    <div style={{fontSize:'13px',color:'var(--text-body)',marginBottom:'14px'}}>
+                    <div style={{ fontSize: '13px', color: 'var(--text-body)', marginBottom: '14px' }}>
                       <strong>Issue:</strong> {req.description}
                       {req.photoUrl && (
-                        <div style={{marginTop:'10px'}}>
-                          <img src={req.photoUrl} alt="issue" style={{maxWidth:'100px',borderRadius:'8px',border:'1px solid var(--border-color)'}}/>
+                        <div style={{ marginTop: '10px' }}>
+                          <img src={req.photoUrl} alt="issue" style={{ maxWidth: '100px', borderRadius: '8px', border: '1px solid var(--border-color)' }} />
                         </div>
                       )}
                     </div>
@@ -1533,13 +1538,13 @@ function App() {
                     )}
 
                     {req.status === 'Rejected' && (
-                      <div style={{fontSize:'12px',background:'rgba(239,68,68,0.08)',padding:'10px 14px',borderRadius:'8px',border:'1px solid rgba(239,68,68,0.2)',color:'#fca5a5'}}>
+                      <div style={{ fontSize: '12px', background: 'rgba(239,68,68,0.08)', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(239,68,68,0.2)', color: '#fca5a5' }}>
                         <strong>Rejected:</strong> {req.rejectionReason || 'No reason provided.'}
                       </div>
                     )}
 
                     {req.status === 'Resolved' && req.resolutionNotes && (
-                      <div style={{fontSize:'12px',background:'rgba(16,185,129,0.08)',padding:'10px 14px',borderRadius:'8px',border:'1px solid rgba(16,185,129,0.2)',color:'#a7f3d0',marginTop:'8px'}}>
+                      <div style={{ fontSize: '12px', background: 'rgba(16,185,129,0.08)', padding: '10px 14px', borderRadius: '8px', border: '1px solid rgba(16,185,129,0.2)', color: '#a7f3d0', marginTop: '8px' }}>
                         <strong>Resolution notes:</strong> {req.resolutionNotes}
                       </div>
                     )}
@@ -1548,18 +1553,18 @@ function App() {
                       <div className="maint-card-actions">
                         {req.status === 'Pending' && (
                           <>
-                            <button className="icon-btn" onClick={()=>handleApproveMaint(req._id)}><Check size={12}/> Approve</button>
-                            <button className="icon-btn danger" onClick={()=>handleOpenRejectMaint(req)}><X size={12}/> Reject</button>
+                            <button className="icon-btn" onClick={() => handleApproveMaint(req._id)}><Check size={12} /> Approve</button>
+                            <button className="icon-btn danger" onClick={() => handleOpenRejectMaint(req)}><X size={12} /> Reject</button>
                           </>
                         )}
                         {req.status === 'Approved' && (
-                          <button className="icon-btn" onClick={()=>handleOpenAssignTech(req)}>Assign Technician</button>
+                          <button className="icon-btn" onClick={() => handleOpenAssignTech(req)}>Assign Technician</button>
                         )}
                         {req.status === 'Technician Assigned' && (
-                          <button className="icon-btn" onClick={()=>handleStartMaintWork(req._id)}>Start Work</button>
+                          <button className="icon-btn" onClick={() => handleStartMaintWork(req._id)}>Start Work</button>
                         )}
                         {req.status === 'In Progress' && (
-                          <button className="icon-btn" onClick={()=>handleOpenResolveMaint(req)}>Mark Resolved</button>
+                          <button className="icon-btn" onClick={() => handleOpenResolveMaint(req)}>Mark Resolved</button>
                         )}
                       </div>
                     )}
@@ -1574,14 +1579,14 @@ function App() {
         {activeTab === 'orgSetup' && currentUser.role === 'Admin' && (
           <>
             <div className="org-tab-bar">
-              <button className={`org-tab-btn ${orgTab==='departments' ? 'active' : ''}`} onClick={()=>setOrgTab('departments')}>
-                <FolderTree size={15}/> Tab A — Departments
+              <button className={`org-tab-btn ${orgTab === 'departments' ? 'active' : ''}`} onClick={() => setOrgTab('departments')}>
+                <FolderTree size={15} /> Tab A — Departments
               </button>
-              <button className={`org-tab-btn ${orgTab==='categories' ? 'active' : ''}`} onClick={()=>setOrgTab('categories')}>
-                <Tag size={15}/> Tab B — Asset Categories
+              <button className={`org-tab-btn ${orgTab === 'categories' ? 'active' : ''}`} onClick={() => setOrgTab('categories')}>
+                <Tag size={15} /> Tab B — Asset Categories
               </button>
-              <button className={`org-tab-btn ${orgTab==='employees' ? 'active' : ''}`} onClick={()=>setOrgTab('employees')}>
-                <Users size={15}/> Tab C — Employee Directory
+              <button className={`org-tab-btn ${orgTab === 'employees' ? 'active' : ''}`} onClick={() => setOrgTab('employees')}>
+                <Users size={15} /> Tab C — Employee Directory
               </button>
             </div>
 
@@ -1590,11 +1595,11 @@ function App() {
               <div className="data-panel">
                 <div className="panel-header">
                   <h2>Department Management</h2>
-                  <button className="btn-add" onClick={openCreateDept}><PlusCircle size={15}/> Add Department</button>
+                  <button className="btn-add" onClick={openCreateDept}><PlusCircle size={15} /> Add Department</button>
                 </div>
 
                 {departments.length === 0 ? (
-                  <div className="empty-state"><FolderTree size={40}/><p>No departments yet. Create the first one.</p></div>
+                  <div className="empty-state"><FolderTree size={40} /><p>No departments yet. Create the first one.</p></div>
                 ) : (
                   <div className="directory-table-container">
                     <table className="directory-table">
@@ -1611,17 +1616,17 @@ function App() {
                       <tbody>
                         {departments.map(d => (
                           <tr key={d._id}>
-                            <td style={{color:'var(--text-title)',fontWeight:600}}>{d.name}</td>
-                            <td style={{maxWidth:'200px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{d.description || '—'}</td>
-                            <td>{d.head ? <><span className={`role-badge ${getRoleBadgeClass(d.head.role)}`}>{d.head.name}</span></> : <span style={{color:'var(--text-muted)'}}>Unassigned</span>}</td>
-                            <td>{d.parentDept ? <span className="hierarchy-label"><ChevronRight size={12}/>{d.parentDept.name}</span> : '—'}</td>
+                            <td style={{ color: 'var(--text-title)', fontWeight: 600 }}>{d.name}</td>
+                            <td style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{d.description || '—'}</td>
+                            <td>{d.head ? <><span className={`role-badge ${getRoleBadgeClass(d.head.role)}`}>{d.head.name}</span></> : <span style={{ color: 'var(--text-muted)' }}>Unassigned</span>}</td>
+                            <td>{d.parentDept ? <span className="hierarchy-label"><ChevronRight size={12} />{d.parentDept.name}</span> : '—'}</td>
                             <td>
-                              <button className={`status-badge ${d.status.toLowerCase()}`} onClick={()=>handleDeptStatusToggle(d)}>{d.status}</button>
+                              <button className={`status-badge ${d.status.toLowerCase()}`} onClick={() => handleDeptStatusToggle(d)}>{d.status}</button>
                             </td>
                             <td>
                               <div className="table-actions">
-                                <button className="icon-btn" onClick={()=>openEditDept(d)}><Pencil size={13}/> Edit</button>
-                                <button className="icon-btn danger" onClick={()=>handleDeactivateDept(d._id, d.name)}><Trash2 size={13}/> Deactivate</button>
+                                <button className="icon-btn" onClick={() => openEditDept(d)}><Pencil size={13} /> Edit</button>
+                                <button className="icon-btn danger" onClick={() => handleDeactivateDept(d._id, d.name)}><Trash2 size={13} /> Deactivate</button>
                               </div>
                             </td>
                           </tr>
@@ -1638,11 +1643,11 @@ function App() {
               <div className="data-panel">
                 <div className="panel-header">
                   <h2>Asset Category Management</h2>
-                  <button className="btn-add" onClick={openCreateCat}><PlusCircle size={15}/> Add Category</button>
+                  <button className="btn-add" onClick={openCreateCat}><PlusCircle size={15} /> Add Category</button>
                 </div>
 
                 {categories.length === 0 ? (
-                  <div className="empty-state"><Tag size={40}/><p>No categories yet.</p></div>
+                  <div className="empty-state"><Tag size={40} /><p>No categories yet.</p></div>
                 ) : (
                   <div className="directory-table-container">
                     <table className="directory-table">
@@ -1658,16 +1663,16 @@ function App() {
                       <tbody>
                         {categories.map(c => (
                           <tr key={c._id}>
-                            <td style={{color:'var(--text-title)',fontWeight:600}}>{c.name}</td>
-                            <td style={{maxWidth:'180px',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{c.description || '—'}</td>
+                            <td style={{ color: 'var(--text-title)', fontWeight: 600 }}>{c.name}</td>
+                            <td style={{ maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.description || '—'}</td>
                             <td>
                               {c.customFields.length === 0
-                                ? <span style={{color:'var(--text-muted)',fontSize:'12px'}}>None</span>
+                                ? <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>None</span>
                                 : (
                                   <div className="field-tags">
-                                    {c.customFields.map((f,i)=>(
+                                    {c.customFields.map((f, i) => (
                                       <span key={i} className={`field-tag ${f.required ? 'required' : ''}`}>
-                                        {f.fieldName} <em style={{opacity:.6}}>({f.fieldType})</em>
+                                        {f.fieldName} <em style={{ opacity: .6 }}>({f.fieldType})</em>
                                       </span>
                                     ))}
                                   </div>
@@ -1678,8 +1683,8 @@ function App() {
                             </td>
                             <td>
                               <div className="table-actions">
-                                <button className="icon-btn" onClick={()=>openEditCat(c)}><Pencil size={13}/> Edit</button>
-                                <button className="icon-btn danger" onClick={()=>handleDeactivateCat(c._id, c.name)}><Trash2 size={13}/> Deactivate</button>
+                                <button className="icon-btn" onClick={() => openEditCat(c)}><Pencil size={13} /> Edit</button>
+                                <button className="icon-btn danger" onClick={() => handleDeactivateCat(c._id, c.name)}><Trash2 size={13} /> Deactivate</button>
                               </div>
                             </td>
                           </tr>
@@ -1696,7 +1701,7 @@ function App() {
               <div className="data-panel">
                 <div className="panel-header">
                   <h2>Employee Directory</h2>
-                  <span style={{fontSize:'13px',color:'var(--text-muted)'}}>Role assignments are only made here</span>
+                  <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Role assignments are only made here</span>
                 </div>
 
                 <div className="directory-table-container">
@@ -1714,16 +1719,16 @@ function App() {
                     <tbody>
                       {directoryUsers.map(emp => (
                         <tr key={emp._id}>
-                          <td style={{color:'var(--text-title)',fontWeight:600}}>{emp.name}</td>
-                          <td style={{fontSize:'13px'}}>{emp.email}</td>
+                          <td style={{ color: 'var(--text-title)', fontWeight: 600 }}>{emp.name}</td>
+                          <td style={{ fontSize: '13px' }}>{emp.email}</td>
                           <td>
                             <select
                               value={emp.department?._id || ''}
-                              onChange={e=>handleUserDept(emp._id, e.target.value || null)}
+                              onChange={e => handleUserDept(emp._id, e.target.value || null)}
                               className="role-select"
                             >
                               <option value="">— No Department —</option>
-                              {departments.filter(d=>d.status==='Active').map(d=>(
+                              {departments.filter(d => d.status === 'Active').map(d => (
                                 <option key={d._id} value={d._id}>{d.name}</option>
                               ))}
                             </select>
@@ -1731,7 +1736,7 @@ function App() {
                           <td>
                             <select
                               value={emp.role}
-                              onChange={e=>handleUserRole(emp._id, e.target.value)}
+                              onChange={e => handleUserRole(emp._id, e.target.value)}
                               className="role-select"
                               disabled={emp._id === currentUser._id}
                             >
@@ -1744,7 +1749,7 @@ function App() {
                           <td>
                             <button
                               className={`status-badge ${emp.status?.toLowerCase() || 'active'}`}
-                              onClick={()=>handleUserStatus(emp._id, emp.status==='Active' ? 'Inactive' : 'Active')}
+                              onClick={() => handleUserStatus(emp._id, emp.status === 'Active' ? 'Inactive' : 'Active')}
                               disabled={emp._id === currentUser._id}
                             >{emp.status || 'Active'}</button>
                           </td>
@@ -1760,38 +1765,38 @@ function App() {
             )}
           </>
         )}
-{activeTab === 'audit' && (
-          <AssetAudit 
-            token={token} 
-            currentUser={currentUser} 
+        {activeTab === 'audit' && (
+          <AssetAudit
+            token={token}
+            currentUser={currentUser}
             departments={departments}
-            directoryUsers={directoryUsers} 
+            directoryUsers={directoryUsers}
           />
         )}
         {activeTab === 'analytics' && (
-<<<<<<< HEAD
           <AssetAnalytics token={token} />
-=======
-          <AnalyticsDashboard allAssets={allAssets} stats={stats} />
->>>>>>> f2606f93f6f046a8b2bdaa6657c2a401869dffc1
+        )}
+
+        {activeTab === "activity" && (
+          <ActivityLogs />
         )}
       </main>
 
       {/* ══════════ DETAIL DRAWER ══════════ */}
       {selectedAsset && (
-        <div className="drawer-overlay" onClick={()=>setSelectedAsset(null)}>
-          <div className="detail-drawer" onClick={e=>e.stopPropagation()}>
+        <div className="drawer-overlay" onClick={() => setSelectedAsset(null)}>
+          <div className="detail-drawer" onClick={e => e.stopPropagation()}>
             <div className="drawer-header">
               <div>
                 <h2>{selectedAsset.name}</h2>
-                <code className="asset-tag" style={{marginTop:'4px'}}>{selectedAsset.assetTag}</code>
+                <code className="asset-tag" style={{ marginTop: '4px' }}>{selectedAsset.assetTag}</code>
               </div>
-              <button className="close-btn" onClick={()=>setSelectedAsset(null)}><X size={18}/></button>
+              <button className="close-btn" onClick={() => setSelectedAsset(null)}><X size={18} /></button>
             </div>
 
             <div className="drawer-tabs">
-              <button className={`drawer-tab ${activeDrawerTab === 'details' ? 'active' : ''}`} onClick={()=>setActiveDrawerTab('details')}>Details</button>
-              <button className={`drawer-tab ${activeDrawerTab === 'history' ? 'active' : ''}`} onClick={()=>setActiveDrawerTab('history')}>History Timeline</button>
+              <button className={`drawer-tab ${activeDrawerTab === 'details' ? 'active' : ''}`} onClick={() => setActiveDrawerTab('details')}>Details</button>
+              <button className={`drawer-tab ${activeDrawerTab === 'history' ? 'active' : ''}`} onClick={() => setActiveDrawerTab('history')}>History Timeline</button>
             </div>
 
             <div className="drawer-body">
@@ -1810,8 +1815,8 @@ function App() {
 
                   {/* Render category specific fields */}
                   {selectedAsset.category?.customFields?.length > 0 && (
-                    <div style={{marginTop:'24px',borderTop:'1px solid var(--border-color)',paddingTop:'18px'}}>
-                      <h3 style={{fontSize:'12px',color:'var(--text-muted)',textTransform:'uppercase',marginBottom:'8px'}}>Category Parameters</h3>
+                    <div style={{ marginTop: '24px', borderTop: '1px solid var(--border-color)', paddingTop: '18px' }}>
+                      <h3 style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px' }}>Category Parameters</h3>
                       <div className="detail-grid">
                         {selectedAsset.category.customFields.map((cf, i) => {
                           const val = selectedAsset.customFieldValues ? selectedAsset.customFieldValues[cf.fieldName] : null;
@@ -1828,24 +1833,24 @@ function App() {
 
                   {/* Render photos/documents */}
                   {selectedAsset.photos?.length > 0 && (
-                    <div style={{marginTop:'24px',borderTop:'1px solid var(--border-color)',paddingTop:'18px'}}>
-                      <h3 style={{fontSize:'12px',color:'var(--text-muted)',textTransform:'uppercase',marginBottom:'8px'}}>Photos</h3>
-                      <div style={{display:'flex',gap:'8px',flexWrap:'wrap'}}>
-                        {selectedAsset.photos.map((p,i)=>(
-                          <img key={i} src={p} alt="asset" style={{width:'80px',height:'80px',objectFit:'cover',borderRadius:'8px',border:'1px solid var(--border-color)'}}/>
+                    <div style={{ marginTop: '24px', borderTop: '1px solid var(--border-color)', paddingTop: '18px' }}>
+                      <h3 style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px' }}>Photos</h3>
+                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        {selectedAsset.photos.map((p, i) => (
+                          <img key={i} src={p} alt="asset" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px', border: '1px solid var(--border-color)' }} />
                         ))}
                       </div>
                     </div>
                   )}
 
                   {selectedAsset.documents?.length > 0 && (
-                    <div style={{marginTop:'24px',borderTop:'1px solid var(--border-color)',paddingTop:'18px'}}>
-                      <h3 style={{fontSize:'12px',color:'var(--text-muted)',textTransform:'uppercase',marginBottom:'8px'}}>Attachments</h3>
-                      <div style={{display:'flex',flexDirection:'column',gap:'6px'}}>
-                        {selectedAsset.documents.map((d,i)=>(
-                          <div key={i} style={{display:'flex',alignItems:'center',gap:'8px',fontSize:'13px'}}>
-                            <FileText size={16} style={{color:'var(--text-muted)'}}/>
-                            <span style={{color:'var(--text-body)',textDecoration:'underline',cursor:'pointer'}} onClick={()=>{
+                    <div style={{ marginTop: '24px', borderTop: '1px solid var(--border-color)', paddingTop: '18px' }}>
+                      <h3 style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '8px' }}>Attachments</h3>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                        {selectedAsset.documents.map((d, i) => (
+                          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px' }}>
+                            <FileText size={16} style={{ color: 'var(--text-muted)' }} />
+                            <span style={{ color: 'var(--text-body)', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => {
                               const link = document.createElement('a');
                               link.href = d.data;
                               link.download = d.name;
@@ -1859,33 +1864,33 @@ function App() {
                 </div>
               ) : (
                 <div>
-                  <h3 style={{fontSize:'12px',color:'var(--text-muted)',textTransform:'uppercase',marginBottom:'12px'}}>Allocation History</h3>
+                  <h3 style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '12px' }}>Allocation History</h3>
                   {assetHistory.allocationHistory?.length === 0 ? (
-                    <p style={{fontSize:'13px',color:'var(--text-muted)'}}>No allocations logged</p>
+                    <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>No allocations logged</p>
                   ) : (
                     assetHistory.allocationHistory?.map((ah, i) => (
                       <div className="history-item" key={i}>
-                        <div className="history-dot" style={{background:'#6366f1'}}/>
+                        <div className="history-dot" style={{ background: '#6366f1' }} />
                         <div className="history-content">
                           <p>Allocated to <strong>{ah.allocatedTo?.name}</strong> by {ah.allocatedBy?.name}</p>
                           <span>{formatDate(ah.startDate)} - {ah.returnedAt ? formatDate(ah.returnedAt) : 'Present'}</span>
-                          {ah.returnConditionNotes && <div style={{fontSize:'11px',marginTop:'4px',opacity:0.8}}>Notes: {ah.returnConditionNotes}</div>}
+                          {ah.returnConditionNotes && <div style={{ fontSize: '11px', marginTop: '4px', opacity: 0.8 }}>Notes: {ah.returnConditionNotes}</div>}
                         </div>
                       </div>
                     ))
                   )}
 
-                  <h3 style={{fontSize:'12px',color:'var(--text-muted)',textTransform:'uppercase',marginTop:'24px',marginBottom:'12px'}}>Maintenance Log</h3>
+                  <h3 style={{ fontSize: '12px', color: 'var(--text-muted)', textTransform: 'uppercase', marginTop: '24px', marginBottom: '12px' }}>Maintenance Log</h3>
                   {assetHistory.maintenanceHistory?.length === 0 ? (
-                    <p style={{fontSize:'13px',color:'var(--text-muted)'}}>No maintenance logged</p>
+                    <p style={{ fontSize: '13px', color: 'var(--text-muted)' }}>No maintenance logged</p>
                   ) : (
                     assetHistory.maintenanceHistory?.map((mh, i) => (
                       <div className="history-item" key={i}>
-                        <div className="history-dot" style={{background:'#fb923c'}}/>
+                        <div className="history-dot" style={{ background: '#fb923c' }} />
                         <div className="history-content">
                           <p><strong>{mh.type}</strong> - {mh.description}</p>
-                          <span style={{display:'block'}}>Priority: {mh.priority} · Status: {mh.status}</span>
-                          {mh.resolutionNotes && <span style={{display:'block',marginTop:'4px'}}>Resolution: {mh.resolutionNotes}</span>}
+                          <span style={{ display: 'block' }}>Priority: {mh.priority} · Status: {mh.status}</span>
+                          {mh.resolutionNotes && <span style={{ display: 'block', marginTop: '4px' }}>Resolution: {mh.resolutionNotes}</span>}
                         </div>
                       </div>
                     ))
@@ -1900,28 +1905,28 @@ function App() {
       {/* ══════════ REGISTER ASSET MODAL ══════════ */}
       {showRegisterAssetModal && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{maxWidth:'580px',maxHeight:'90vh',overflowY:'auto'}}>
+          <div className="modal-content" style={{ maxWidth: '580px', maxHeight: '90vh', overflowY: 'auto' }}>
             <div className="modal-header">
               <h2>Register New Asset</h2>
-              <button className="close-btn" onClick={()=>setShowRegisterAssetModal(false)}><X size={18}/></button>
+              <button className="close-btn" onClick={() => setShowRegisterAssetModal(false)}><X size={18} /></button>
             </div>
             <form onSubmit={handleRegisterAssetSubmit}>
               <div className="form-group">
                 <label>Asset Name *</label>
-                <input type="text" required placeholder="e.g. MacBook Pro M3" value={registerAssetForm.name} onChange={e=>setRegisterAssetForm({...registerAssetForm,name:e.target.value})} style={{width:'100%'}}/>
+                <input type="text" required placeholder="e.g. MacBook Pro M3" value={registerAssetForm.name} onChange={e => setRegisterAssetForm({ ...registerAssetForm, name: e.target.value })} style={{ width: '100%' }} />
               </div>
               <div className="form-group">
                 <label>Serial Number *</label>
-                <input type="text" required placeholder="e.g. SN-XYZ-9082" value={registerAssetForm.serialNumber} onChange={e=>setRegisterAssetForm({...registerAssetForm,serialNumber:e.target.value})} style={{width:'100%'}}/>
+                <input type="text" required placeholder="e.g. SN-XYZ-9082" value={registerAssetForm.serialNumber} onChange={e => setRegisterAssetForm({ ...registerAssetForm, serialNumber: e.target.value })} style={{ width: '100%' }} />
               </div>
               <div className="form-group">
                 <label>Category</label>
-                <select value={registerAssetForm.category} onChange={e=>{
+                <select value={registerAssetForm.category} onChange={e => {
                   const catId = e.target.value;
-                  setRegisterAssetForm({...registerAssetForm,category:catId,customFieldValues:{}});
-                }} style={{width:'100%'}}>
+                  setRegisterAssetForm({ ...registerAssetForm, category: catId, customFieldValues: {} });
+                }} style={{ width: '100%' }}>
                   <option value="">— Select Category —</option>
-                  {categories.filter(c=>c.status==='Active').map(c=><option key={c._id} value={c._id}>{c.name}</option>)}
+                  {categories.filter(c => c.status === 'Active').map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
                 </select>
               </div>
 
@@ -1930,16 +1935,16 @@ function App() {
                 const selectedCatObj = categories.find(c => c._id === registerAssetForm.category);
                 if (selectedCatObj?.customFields?.length > 0) {
                   return (
-                    <div style={{background:'rgba(15,23,42,0.3)',padding:'12px',borderRadius:'8px',marginBottom:'16px'}}>
-                      <h4 style={{fontSize:'12px',fontWeight:600,color:'var(--text-title)',marginBottom:'8px'}}>Category Settings</h4>
+                    <div style={{ background: 'rgba(15,23,42,0.3)', padding: '12px', borderRadius: '8px', marginBottom: '16px' }}>
+                      <h4 style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-title)', marginBottom: '8px' }}>Category Settings</h4>
                       {selectedCatObj.customFields.map((cf, i) => (
                         <div className="form-group" key={i}>
                           <label>{cf.fieldName} {cf.required ? '*' : ''}</label>
                           {cf.fieldType === 'boolean' ? (
-                            <select required={cf.required} value={registerAssetForm.customFieldValues[cf.fieldName] || 'false'} onChange={e=>setRegisterAssetForm({
+                            <select required={cf.required} value={registerAssetForm.customFieldValues[cf.fieldName] || 'false'} onChange={e => setRegisterAssetForm({
                               ...registerAssetForm,
                               customFieldValues: { ...registerAssetForm.customFieldValues, [cf.fieldName]: e.target.value === 'true' }
-                            })} style={{width:'100%'}}>
+                            })} style={{ width: '100%' }}>
                               <option value="false">No</option>
                               <option value="true">Yes</option>
                             </select>
@@ -1949,11 +1954,11 @@ function App() {
                               required={cf.required}
                               placeholder={cf.fieldName}
                               value={registerAssetForm.customFieldValues[cf.fieldName] || ''}
-                              onChange={e=>setRegisterAssetForm({
+                              onChange={e => setRegisterAssetForm({
                                 ...registerAssetForm,
                                 customFieldValues: { ...registerAssetForm.customFieldValues, [cf.fieldName]: cf.fieldType === 'number' ? Number(e.target.value) : e.target.value }
                               })}
-                              style={{width:'100%'}}
+                              style={{ width: '100%' }}
                             />
                           )}
                         </div>
@@ -1966,38 +1971,38 @@ function App() {
 
               <div className="form-group">
                 <label>Department</label>
-                <select value={registerAssetForm.department} onChange={e=>setRegisterAssetForm({...registerAssetForm,department:e.target.value})} style={{width:'100%'}}>
+                <select value={registerAssetForm.department} onChange={e => setRegisterAssetForm({ ...registerAssetForm, department: e.target.value })} style={{ width: '100%' }}>
                   <option value="">— Select Department —</option>
-                  {departments.filter(d=>d.status==='Active').map(d=><option key={d._id} value={d._id}>{d.name}</option>)}
+                  {departments.filter(d => d.status === 'Active').map(d => <option key={d._id} value={d._id}>{d.name}</option>)}
                 </select>
               </div>
 
               <div className="form-group">
                 <label>Condition</label>
-                <select value={registerAssetForm.condition} onChange={e=>setRegisterAssetForm({...registerAssetForm,condition:e.target.value})} style={{width:'100%'}}>
-                  {["Excellent", "Good", "Fair", "Damaged"].map(c=><option key={c} value={c}>{c}</option>)}
+                <select value={registerAssetForm.condition} onChange={e => setRegisterAssetForm({ ...registerAssetForm, condition: e.target.value })} style={{ width: '100%' }}>
+                  {["Excellent", "Good", "Fair", "Damaged"].map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
 
               <div className="form-group">
                 <label>Location</label>
-                <input type="text" placeholder="e.g. IT Storage Room" value={registerAssetForm.location} onChange={e=>setRegisterAssetForm({...registerAssetForm,location:e.target.value})} style={{width:'100%'}}/>
+                <input type="text" placeholder="e.g. IT Storage Room" value={registerAssetForm.location} onChange={e => setRegisterAssetForm({ ...registerAssetForm, location: e.target.value })} style={{ width: '100%' }} />
               </div>
 
               <div className="detail-grid">
                 <div className="form-group">
                   <label>Acquisition Cost</label>
-                  <input type="number" placeholder="$" value={registerAssetForm.acquisitionCost} onChange={e=>setRegisterAssetForm({...registerAssetForm,acquisitionCost:Number(e.target.value)})} style={{width:'100%'}}/>
+                  <input type="number" placeholder="$" value={registerAssetForm.acquisitionCost} onChange={e => setRegisterAssetForm({ ...registerAssetForm, acquisitionCost: Number(e.target.value) })} style={{ width: '100%' }} />
                 </div>
                 <div className="form-group">
                   <label>Acquisition Date</label>
-                  <input type="date" value={registerAssetForm.acquisitionDate} onChange={e=>setRegisterAssetForm({...registerAssetForm,acquisitionDate:e.target.value})} style={{width:'100%'}}/>
+                  <input type="date" value={registerAssetForm.acquisitionDate} onChange={e => setRegisterAssetForm({ ...registerAssetForm, acquisitionDate: e.target.value })} style={{ width: '100%' }} />
                 </div>
               </div>
 
               <div className="form-group">
-                <label style={{display:'flex',alignItems:'center',gap:'8px',cursor:'pointer'}}>
-                  <input type="checkbox" checked={registerAssetForm.isBookable} onChange={e=>setRegisterAssetForm({...registerAssetForm,isBookable:e.target.checked})} style={{width:'auto',margin:0}}/>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input type="checkbox" checked={registerAssetForm.isBookable} onChange={e => setRegisterAssetForm({ ...registerAssetForm, isBookable: e.target.checked })} style={{ width: 'auto', margin: 0 }} />
                   Mark as shared/bookable resource (available in Booking screen)
                 </label>
               </div>
@@ -2005,24 +2010,24 @@ function App() {
               {/* Photo & Document uploading zone */}
               <div className="form-group">
                 <label>Photos</label>
-                <input type="file" multiple accept="image/*" onChange={handlePhotoUploadChange}/>
+                <input type="file" multiple accept="image/*" onChange={handlePhotoUploadChange} />
                 <div className="upload-preview">
-                  {registerAssetForm.photos.map((p,i)=><img key={i} src={p} alt="upload"/>)}
+                  {registerAssetForm.photos.map((p, i) => <img key={i} src={p} alt="upload" />)}
                 </div>
               </div>
 
               <div className="form-group">
                 <label>Attachments (Documents)</label>
-                <input type="file" multiple onChange={handleDocUploadChange}/>
-                <div style={{marginTop:'6px'}}>
-                  {registerAssetForm.documents.map((d,i)=>(
-                    <div key={i} style={{fontSize:'12px',color:'var(--text-muted)'}}>{d.name}</div>
+                <input type="file" multiple onChange={handleDocUploadChange} />
+                <div style={{ marginTop: '6px' }}>
+                  {registerAssetForm.documents.map((d, i) => (
+                    <div key={i} style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{d.name}</div>
                   ))}
                 </div>
               </div>
 
               <div className="modal-actions">
-                <button type="button" className="btn-secondary" onClick={()=>setShowRegisterAssetModal(false)}>Cancel</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowRegisterAssetModal(false)}>Cancel</button>
                 <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Saving…' : 'Register Asset'}</button>
               </div>
             </form>
@@ -2033,20 +2038,20 @@ function App() {
       {/* ══════════ ALLOCATE ASSET MODAL ══════════ */}
       {showAllocateModal && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{maxWidth:'520px'}}>
+          <div className="modal-content" style={{ maxWidth: '520px' }}>
             <div className="modal-header">
               <h2>Allocate Asset</h2>
-              <button className="close-btn" onClick={()=>setShowAllocateModal(false)}><X size={18}/></button>
+              <button className="close-btn" onClick={() => setShowAllocateModal(false)}><X size={18} /></button>
             </div>
             <form onSubmit={handleAllocateSubmit}>
               <div className="form-group">
                 <label>Select Asset *</label>
-                <select required value={allocateForm.assetId} onChange={e=>{
-                  setAllocateForm({...allocateForm,assetId:e.target.value});
+                <select required value={allocateForm.assetId} onChange={e => {
+                  setAllocateForm({ ...allocateForm, assetId: e.target.value });
                   setConflictError(null);
-                }} style={{width:'100%'}}>
+                }} style={{ width: '100%' }}>
                   <option value="">— Select Asset —</option>
-                  {allAssets.map(a=>(
+                  {allAssets.map(a => (
                     <option key={a._id} value={a._id}>{a.name} [{a.assetTag}] · {a.status}</option>
                   ))}
                 </select>
@@ -2059,21 +2064,21 @@ function App() {
                       <strong>Conflict:</strong> This asset is currently occupied.
                     </div>
                     {conflictError.currentHolder && (
-                      <div style={{fontSize:'12px',opacity:0.9}}>
+                      <div style={{ fontSize: '12px', opacity: 0.9 }}>
                         Held by: {conflictError.currentHolder.name} ({conflictError.currentHolder.email})
                       </div>
                     )}
                     {conflictError.canRequestTransfer && (
-                      <div style={{marginTop:'8px'}}>
+                      <div style={{ marginTop: '8px' }}>
                         <label>Transfer Reason / Comment</label>
                         <input
                           type="text"
                           placeholder="e.g. Urgently needed for production release..."
                           value={transferComment}
-                          onChange={e=>setTransferComment(e.target.value)}
-                          style={{width:'100%',background:'rgba(0,0,0,0.2)',borderColor:'rgba(239,68,68,0.2)',color:'white',marginTop:'4px'}}
+                          onChange={e => setTransferComment(e.target.value)}
+                          style={{ width: '100%', background: 'rgba(0,0,0,0.2)', borderColor: 'rgba(239,68,68,0.2)', color: 'white', marginTop: '4px' }}
                         />
-                        <button type="button" className="btn-primary" onClick={handleRequestTransfer} style={{marginTop:'10px',background:'#ef4444',borderColor:'#ef4444',width:'100%'}}>
+                        <button type="button" className="btn-primary" onClick={handleRequestTransfer} style={{ marginTop: '10px', background: '#ef4444', borderColor: '#ef4444', width: '100%' }}>
                           Request Transfer Instead
                         </button>
                       </div>
@@ -2084,9 +2089,9 @@ function App() {
 
               <div className="form-group">
                 <label>Allocate To User *</label>
-                <select required value={allocateForm.allocatedToUserId} onChange={e=>setAllocateForm({...allocateForm,allocatedToUserId:e.target.value})} style={{width:'100%'}}>
+                <select required value={allocateForm.allocatedToUserId} onChange={e => setAllocateForm({ ...allocateForm, allocatedToUserId: e.target.value })} style={{ width: '100%' }}>
                   <option value="">— Select User —</option>
-                  {directoryUsers.filter(u=>u.status==='Active').map(u=>(
+                  {directoryUsers.filter(u => u.status === 'Active').map(u => (
                     <option key={u._id} value={u._id}>{u.name} ({u.role})</option>
                   ))}
                 </select>
@@ -2094,26 +2099,26 @@ function App() {
 
               <div className="form-group">
                 <label>Department</label>
-                <select value={allocateForm.departmentId} onChange={e=>setAllocateForm({...allocateForm,departmentId:e.target.value})} style={{width:'100%'}}>
+                <select value={allocateForm.departmentId} onChange={e => setAllocateForm({ ...allocateForm, departmentId: e.target.value })} style={{ width: '100%' }}>
                   <option value="">— Select Department —</option>
-                  {departments.filter(d=>d.status==='Active').map(d=>(
+                  {departments.filter(d => d.status === 'Active').map(d => (
                     <option key={d._id} value={d._id}>{d.name}</option>
                   ))}
                 </select>
               </div>
 
               <div className="form-group">
-                <label>Expected Return Date <span style={{color:'var(--text-muted)',fontSize:'12px'}}>(optional)</span></label>
-                <input type="date" value={allocateForm.expectedReturnDate} onChange={e=>setAllocateForm({...allocateForm,expectedReturnDate:e.target.value})} style={{width:'100%'}}/>
+                <label>Expected Return Date <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>(optional)</span></label>
+                <input type="date" value={allocateForm.expectedReturnDate} onChange={e => setAllocateForm({ ...allocateForm, expectedReturnDate: e.target.value })} style={{ width: '100%' }} />
               </div>
 
               <div className="form-group">
                 <label>Notes</label>
-                <textarea rows="2" placeholder="Allocation comments..." value={allocateForm.notes} onChange={e=>setAllocateForm({...allocateForm,notes:e.target.value})} style={{width:'100%'}}/>
+                <textarea rows="2" placeholder="Allocation comments..." value={allocateForm.notes} onChange={e => setAllocateForm({ ...allocateForm, notes: e.target.value })} style={{ width: '100%' }} />
               </div>
 
               <div className="modal-actions">
-                <button type="button" className="btn-secondary" onClick={()=>setShowAllocateModal(false)}>Cancel</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowAllocateModal(false)}>Cancel</button>
                 <button type="submit" disabled={loading || !!conflictError} className="btn-primary">{loading ? 'Allocating…' : 'Allocate Asset'}</button>
               </div>
             </form>
@@ -2124,18 +2129,18 @@ function App() {
       {/* ══════════ RETURN ASSET MODAL ══════════ */}
       {showReturnModal && returningAllocation && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{maxWidth:'500px'}}>
+          <div className="modal-content" style={{ maxWidth: '500px' }}>
             <div className="modal-header">
               <h2>Confirm Return of Asset</h2>
-              <button className="close-btn" onClick={()=>setShowReturnModal(false)}><X size={18}/></button>
+              <button className="close-btn" onClick={() => setShowReturnModal(false)}><X size={18} /></button>
             </div>
             <form onSubmit={handleReturnSubmit}>
-              <p style={{fontSize:'14px',color:'var(--text-body)',marginBottom:'16px'}}>
+              <p style={{ fontSize: '14px', color: 'var(--text-body)', marginBottom: '16px' }}>
                 You are marking the asset <strong>{returningAllocation.asset?.name}</strong> [{returningAllocation.asset?.assetTag}] as returned.
               </p>
               <div className="form-group">
                 <label>Asset Condition on check-in</label>
-                <select value={returnForm.condition} onChange={e=>setReturnForm({...returnForm,condition:e.target.value})} style={{width:'100%'}}>
+                <select value={returnForm.condition} onChange={e => setReturnForm({ ...returnForm, condition: e.target.value })} style={{ width: '100%' }}>
                   <option value="Excellent">Excellent</option>
                   <option value="Good">Good</option>
                   <option value="Fair">Fair</option>
@@ -2144,10 +2149,10 @@ function App() {
               </div>
               <div className="form-group">
                 <label>Condition Check-in Notes</label>
-                <textarea rows="3" placeholder="Condition details, scratches, missing components..." value={returnForm.returnConditionNotes} onChange={e=>setReturnForm({...returnForm,returnConditionNotes:e.target.value})} style={{width:'100%'}}/>
+                <textarea rows="3" placeholder="Condition details, scratches, missing components..." value={returnForm.returnConditionNotes} onChange={e => setReturnForm({ ...returnForm, returnConditionNotes: e.target.value })} style={{ width: '100%' }} />
               </div>
               <div className="modal-actions">
-                <button type="button" className="btn-secondary" onClick={()=>setShowReturnModal(false)}>Cancel</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowReturnModal(false)}>Cancel</button>
                 <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Processing…' : 'Confirm Return'}</button>
               </div>
             </form>
@@ -2158,20 +2163,20 @@ function App() {
       {/* ══════════ BOOK RESOURCE MODAL ══════════ */}
       {showBookingModal && selectedBookableAsset && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{maxWidth:'500px'}}>
+          <div className="modal-content" style={{ maxWidth: '500px' }}>
             <div className="modal-header">
               <h2>Book {selectedBookableAsset.name}</h2>
-              <button className="close-btn" onClick={()=>setShowBookingModal(false)}><X size={18}/></button>
+              <button className="close-btn" onClick={() => setShowBookingModal(false)}><X size={18} /></button>
             </div>
             <form onSubmit={handleBookingSubmit}>
               <div className="form-group">
                 <label>Booking Date *</label>
-                <input type="date" required value={bookingForm.startDate} onChange={e=>setBookingForm({...bookingForm,startDate:e.target.value})} style={{width:'100%'}}/>
+                <input type="date" required value={bookingForm.startDate} onChange={e => setBookingForm({ ...bookingForm, startDate: e.target.value })} style={{ width: '100%' }} />
               </div>
               <div className="detail-grid">
                 <div className="form-group">
                   <label>Start Time *</label>
-                  <select value={bookingForm.startTime} onChange={e=>setBookingForm({...bookingForm,startTime:e.target.value})} style={{width:'100%'}}>
+                  <select value={bookingForm.startTime} onChange={e => setBookingForm({ ...bookingForm, startTime: e.target.value })} style={{ width: '100%' }}>
                     {Array.from({ length: 24 }).map((_, h) => {
                       const hourStr = String(h).padStart(2, '0');
                       return (
@@ -2185,7 +2190,7 @@ function App() {
                 </div>
                 <div className="form-group">
                   <label>End Time *</label>
-                  <select value={bookingForm.endTime} onChange={e=>setBookingForm({...bookingForm,endTime:e.target.value})} style={{width:'100%'}}>
+                  <select value={bookingForm.endTime} onChange={e => setBookingForm({ ...bookingForm, endTime: e.target.value })} style={{ width: '100%' }}>
                     {Array.from({ length: 24 }).map((_, h) => {
                       const hourStr = String(h).padStart(2, '0');
                       return (
@@ -2200,10 +2205,10 @@ function App() {
               </div>
               <div className="form-group">
                 <label>Purpose *</label>
-                <textarea required rows="2" placeholder="e.g. Design review with product team" value={bookingForm.purpose} onChange={e=>setBookingForm({...bookingForm,purpose:e.target.value})} style={{width:'100%'}}/>
+                <textarea required rows="2" placeholder="e.g. Design review with product team" value={bookingForm.purpose} onChange={e => setBookingForm({ ...bookingForm, purpose: e.target.value })} style={{ width: '100%' }} />
               </div>
               <div className="modal-actions">
-                <button type="button" className="btn-secondary" onClick={()=>setShowBookingModal(false)}>Cancel</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowBookingModal(false)}>Cancel</button>
                 <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Reserving…' : 'Reserve Slot'}</button>
               </div>
             </form>
@@ -2214,47 +2219,47 @@ function App() {
       {/* ══════════ DEPT MODAL ══════════ */}
       {showDeptModal && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{maxWidth:'520px'}}>
+          <div className="modal-content" style={{ maxWidth: '520px' }}>
             <div className="modal-header">
               <h2>{editingDept ? 'Edit Department' : 'Create Department'}</h2>
-              <button className="close-btn" onClick={()=>setShowDeptModal(false)}><X size={18}/></button>
+              <button className="close-btn" onClick={() => setShowDeptModal(false)}><X size={18} /></button>
             </div>
             <form onSubmit={handleDeptSubmit}>
               <div className="form-group">
                 <label>Department Name *</label>
-                <input type="text" required placeholder="e.g. Finance" value={deptForm.name} onChange={e=>setDeptForm({...deptForm,name:e.target.value})} style={{width:'100%'}}/>
+                <input type="text" required placeholder="e.g. Finance" value={deptForm.name} onChange={e => setDeptForm({ ...deptForm, name: e.target.value })} style={{ width: '100%' }} />
               </div>
               <div className="form-group">
                 <label>Description</label>
-                <textarea rows="2" placeholder="Brief description…" value={deptForm.description} onChange={e=>setDeptForm({...deptForm,description:e.target.value})} style={{width:'100%'}}/>
+                <textarea rows="2" placeholder="Brief description…" value={deptForm.description} onChange={e => setDeptForm({ ...deptForm, description: e.target.value })} style={{ width: '100%' }} />
               </div>
               <div className="form-group">
                 <label>Department Head</label>
-                <select value={deptForm.head} onChange={e=>setDeptForm({...deptForm,head:e.target.value})} style={{width:'100%'}}>
+                <select value={deptForm.head} onChange={e => setDeptForm({ ...deptForm, head: e.target.value })} style={{ width: '100%' }}>
                   <option value="">— Unassigned —</option>
-                  {directoryUsers.filter(u=>u.role==='Department Head'||u.role==='Admin').map(u=>(
+                  {directoryUsers.filter(u => u.role === 'Department Head' || u.role === 'Admin').map(u => (
                     <option key={u._id} value={u._id}>{u.name} ({u.role})</option>
                   ))}
                 </select>
               </div>
               <div className="form-group">
-                <label>Parent Department <span style={{color:'var(--text-muted)',fontSize:'12px'}}>(optional — for hierarchy)</span></label>
-                <select value={deptForm.parentDept} onChange={e=>setDeptForm({...deptForm,parentDept:e.target.value})} style={{width:'100%'}}>
+                <label>Parent Department <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>(optional — for hierarchy)</span></label>
+                <select value={deptForm.parentDept} onChange={e => setDeptForm({ ...deptForm, parentDept: e.target.value })} style={{ width: '100%' }}>
                   <option value="">— None (top-level) —</option>
-                  {departments.filter(d=>d.status==='Active' && d._id !== editingDept?._id).map(d=>(
+                  {departments.filter(d => d.status === 'Active' && d._id !== editingDept?._id).map(d => (
                     <option key={d._id} value={d._id}>{d.name}</option>
                   ))}
                 </select>
               </div>
               <div className="form-group">
                 <label>Status</label>
-                <select value={deptForm.status} onChange={e=>setDeptForm({...deptForm,status:e.target.value})} style={{width:'100%'}}>
+                <select value={deptForm.status} onChange={e => setDeptForm({ ...deptForm, status: e.target.value })} style={{ width: '100%' }}>
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                 </select>
               </div>
               <div className="modal-actions">
-                <button type="button" className="btn-secondary" onClick={()=>setShowDeptModal(false)}>Cancel</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowDeptModal(false)}>Cancel</button>
                 <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Saving…' : editingDept ? 'Save Changes' : 'Create Department'}</button>
               </div>
             </form>
@@ -2265,23 +2270,23 @@ function App() {
       {/* ══════════ CATEGORY MODAL ══════════ */}
       {showCatModal && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{maxWidth:'580px',maxHeight:'90vh',overflowY:'auto'}}>
+          <div className="modal-content" style={{ maxWidth: '580px', maxHeight: '90vh', overflowY: 'auto' }}>
             <div className="modal-header">
               <h2>{editingCat ? 'Edit Category' : 'Create Asset Category'}</h2>
-              <button className="close-btn" onClick={()=>setShowCatModal(false)}><X size={18}/></button>
+              <button className="close-btn" onClick={() => setShowCatModal(false)}><X size={18} /></button>
             </div>
             <form onSubmit={handleCatSubmit}>
               <div className="form-group">
                 <label>Category Name *</label>
-                <input type="text" required placeholder="e.g. Electronics" value={catForm.name} onChange={e=>setCatForm({...catForm,name:e.target.value})} style={{width:'100%'}}/>
+                <input type="text" required placeholder="e.g. Electronics" value={catForm.name} onChange={e => setCatForm({ ...catForm, name: e.target.value })} style={{ width: '100%' }} />
               </div>
               <div className="form-group">
                 <label>Description</label>
-                <textarea rows="2" placeholder="What assets belong here…" value={catForm.description} onChange={e=>setCatForm({...catForm,description:e.target.value})} style={{width:'100%'}}/>
+                <textarea rows="2" placeholder="What assets belong here…" value={catForm.description} onChange={e => setCatForm({ ...catForm, description: e.target.value })} style={{ width: '100%' }} />
               </div>
 
               <div className="form-group">
-                <label>Category-Specific Fields <span style={{color:'var(--text-muted)',fontSize:'12px'}}>(optional — e.g. warranty period for Electronics)</span></label>
+                <label>Category-Specific Fields <span style={{ color: 'var(--text-muted)', fontSize: '12px' }}>(optional — e.g. warranty period for Electronics)</span></label>
                 <div className="custom-fields-builder">
                   {catForm.customFields.map((field, i) => (
                     <div className="custom-field-row" key={i}>
@@ -2289,35 +2294,35 @@ function App() {
                         type="text"
                         placeholder="Field name (e.g. warrantyPeriod)"
                         value={field.fieldName}
-                        onChange={e=>updateCustomField(i,'fieldName',e.target.value)}
-                        style={{width:'100%'}}
+                        onChange={e => updateCustomField(i, 'fieldName', e.target.value)}
+                        style={{ width: '100%' }}
                       />
-                      <select value={field.fieldType} onChange={e=>updateCustomField(i,'fieldType',e.target.value)}>
+                      <select value={field.fieldType} onChange={e => updateCustomField(i, 'fieldType', e.target.value)}>
                         <option value="text">Text</option>
                         <option value="number">Number</option>
                         <option value="date">Date</option>
                         <option value="boolean">Yes/No</option>
                       </select>
                       <label className="field-required-check">
-                        <input type="checkbox" checked={field.required} onChange={e=>updateCustomField(i,'required',e.target.checked)}/>
+                        <input type="checkbox" checked={field.required} onChange={e => updateCustomField(i, 'required', e.target.checked)} />
                         Required
                       </label>
-                      <button type="button" className="remove-field-btn" onClick={()=>removeCustomField(i)}><X size={14}/></button>
+                      <button type="button" className="remove-field-btn" onClick={() => removeCustomField(i)}><X size={14} /></button>
                     </div>
                   ))}
-                  <button type="button" className="add-field-btn" onClick={addCustomField}><PlusCircle size={14}/> Add Custom Field</button>
+                  <button type="button" className="add-field-btn" onClick={addCustomField}><PlusCircle size={14} /> Add Custom Field</button>
                 </div>
               </div>
 
               <div className="form-group">
                 <label>Status</label>
-                <select value={catForm.status} onChange={e=>setCatForm({...catForm,status:e.target.value})} style={{width:'100%'}}>
+                <select value={catForm.status} onChange={e => setCatForm({ ...catForm, status: e.target.value })} style={{ width: '100%' }}>
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                 </select>
               </div>
               <div className="modal-actions">
-                <button type="button" className="btn-secondary" onClick={()=>setShowCatModal(false)}>Cancel</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowCatModal(false)}>Cancel</button>
                 <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Saving…' : editingCat ? 'Save Changes' : 'Create Category'}</button>
               </div>
             </form>
@@ -2328,24 +2333,24 @@ function App() {
       {/* ══════════ RAISE MAINTENANCE MODAL ══════════ */}
       {showMaintModal && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{maxWidth:'500px'}}>
+          <div className="modal-content" style={{ maxWidth: '500px' }}>
             <div className="modal-header">
               <h2>Raise Maintenance Request</h2>
-              <button className="close-btn" onClick={()=>setShowMaintModal(false)}><X size={18}/></button>
+              <button className="close-btn" onClick={() => setShowMaintModal(false)}><X size={18} /></button>
             </div>
             <form onSubmit={handleRaiseMaintSubmit}>
               <div className="form-group">
                 <label>Select Asset *</label>
-                <select required value={maintForm.assetId} onChange={e=>setMaintForm({...maintForm,assetId:e.target.value})} style={{width:'100%'}}>
+                <select required value={maintForm.assetId} onChange={e => setMaintForm({ ...maintForm, assetId: e.target.value })} style={{ width: '100%' }}>
                   <option value="">— Choose Asset —</option>
-                  {allAssets.map(a=>(
+                  {allAssets.map(a => (
                     <option key={a._id} value={a._id}>{a.name} [{a.assetTag}]</option>
                   ))}
                 </select>
               </div>
               <div className="form-group">
                 <label>Type *</label>
-                <select value={maintForm.type} onChange={e=>setMaintForm({...maintForm,type:e.target.value})} style={{width:'100%'}}>
+                <select value={maintForm.type} onChange={e => setMaintForm({ ...maintForm, type: e.target.value })} style={{ width: '100%' }}>
                   <option value="Repair">Repair</option>
                   <option value="Routine">Routine</option>
                   <option value="Upgrade">Upgrade</option>
@@ -2353,7 +2358,7 @@ function App() {
               </div>
               <div className="form-group">
                 <label>Priority *</label>
-                <select value={maintForm.priority} onChange={e=>setMaintForm({...maintForm,priority:e.target.value})} style={{width:'100%'}}>
+                <select value={maintForm.priority} onChange={e => setMaintForm({ ...maintForm, priority: e.target.value })} style={{ width: '100%' }}>
                   <option value="Low">Low</option>
                   <option value="Medium">Medium</option>
                   <option value="High">High</option>
@@ -2361,19 +2366,19 @@ function App() {
               </div>
               <div className="form-group">
                 <label>Description of Issue *</label>
-                <textarea required rows="3" placeholder="Describe the fault or service needed..." value={maintForm.description} onChange={e=>setMaintForm({...maintForm,description:e.target.value})} style={{width:'100%'}}/>
+                <textarea required rows="3" placeholder="Describe the fault or service needed..." value={maintForm.description} onChange={e => setMaintForm({ ...maintForm, description: e.target.value })} style={{ width: '100%' }} />
               </div>
               <div className="form-group">
                 <label>Attach Photo of Fault</label>
-                <input type="file" accept="image/*" onChange={handleMaintPhotoUpload}/>
+                <input type="file" accept="image/*" onChange={handleMaintPhotoUpload} />
                 {maintForm.photoUrl && (
-                  <div style={{marginTop:'8px'}}>
-                    <img src={maintForm.photoUrl} alt="upload fault" style={{maxWidth:'100px',borderRadius:'8px'}}/>
+                  <div style={{ marginTop: '8px' }}>
+                    <img src={maintForm.photoUrl} alt="upload fault" style={{ maxWidth: '100px', borderRadius: '8px' }} />
                   </div>
                 )}
               </div>
               <div className="modal-actions">
-                <button type="button" className="btn-secondary" onClick={()=>setShowMaintModal(false)}>Cancel</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowMaintModal(false)}>Cancel</button>
                 <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Raising…' : 'Raise Request'}</button>
               </div>
             </form>
@@ -2384,22 +2389,22 @@ function App() {
       {/* ══════════ ASSIGN TECHNICIAN MODAL ══════════ */}
       {showAssignTechModal && selectedMaintRequest && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{maxWidth:'480px'}}>
+          <div className="modal-content" style={{ maxWidth: '480px' }}>
             <div className="modal-header">
               <h2>Assign Technician</h2>
-              <button className="close-btn" onClick={()=>setShowAssignTechModal(false)}><X size={18}/></button>
+              <button className="close-btn" onClick={() => setShowAssignTechModal(false)}><X size={18} /></button>
             </div>
             <form onSubmit={handleAssignTechSubmit}>
               <div className="form-group">
                 <label>Technician Name *</label>
-                <input type="text" required placeholder="e.g. John Repairer" value={techAssignForm.technicianName} onChange={e=>setTechAssignForm({...techAssignForm,technicianName:e.target.value})} style={{width:'100%'}}/>
+                <input type="text" required placeholder="e.g. John Repairer" value={techAssignForm.technicianName} onChange={e => setTechAssignForm({ ...techAssignForm, technicianName: e.target.value })} style={{ width: '100%' }} />
               </div>
               <div className="form-group">
                 <label>Scheduled Service Date</label>
-                <input type="date" value={techAssignForm.scheduledDate} onChange={e=>setTechAssignForm({...techAssignForm,scheduledDate:e.target.value})} style={{width:'100%'}}/>
+                <input type="date" value={techAssignForm.scheduledDate} onChange={e => setTechAssignForm({ ...techAssignForm, scheduledDate: e.target.value })} style={{ width: '100%' }} />
               </div>
               <div className="modal-actions">
-                <button type="button" className="btn-secondary" onClick={()=>setShowAssignTechModal(false)}>Cancel</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowAssignTechModal(false)}>Cancel</button>
                 <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Assigning…' : 'Assign & Schedule'}</button>
               </div>
             </form>
@@ -2410,19 +2415,19 @@ function App() {
       {/* ══════════ RESOLVE MAINTENANCE MODAL ══════════ */}
       {showResolveMaintModal && selectedMaintRequest && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{maxWidth:'480px'}}>
+          <div className="modal-content" style={{ maxWidth: '480px' }}>
             <div className="modal-header">
               <h2>Resolve Maintenance Work</h2>
-              <button className="close-btn" onClick={()=>setShowResolveMaintModal(false)}><X size={18}/></button>
+              <button className="close-btn" onClick={() => setShowResolveMaintModal(false)}><X size={18} /></button>
             </div>
             <form onSubmit={handleResolveMaintSubmit}>
               <div className="form-group">
                 <label>Resolution / Repairs Made *</label>
-                <textarea required rows="3" placeholder="Explain what was fixed..." value={resolveMaintForm.resolutionNotes} onChange={e=>setResolveMaintForm({...resolveMaintForm,resolutionNotes:e.target.value})} style={{width:'100%'}}/>
+                <textarea required rows="3" placeholder="Explain what was fixed..." value={resolveMaintForm.resolutionNotes} onChange={e => setResolveMaintForm({ ...resolveMaintForm, resolutionNotes: e.target.value })} style={{ width: '100%' }} />
               </div>
               <div className="form-group">
                 <label>Post-Repair Asset Condition</label>
-                <select value={resolveMaintForm.postRepairCondition} onChange={e=>setResolveMaintForm({...resolveMaintForm,postRepairCondition:e.target.value})} style={{width:'100%'}}>
+                <select value={resolveMaintForm.postRepairCondition} onChange={e => setResolveMaintForm({ ...resolveMaintForm, postRepairCondition: e.target.value })} style={{ width: '100%' }}>
                   <option value="Excellent">Excellent</option>
                   <option value="Good">Good</option>
                   <option value="Fair">Fair</option>
@@ -2430,7 +2435,7 @@ function App() {
                 </select>
               </div>
               <div className="modal-actions">
-                <button type="button" className="btn-secondary" onClick={()=>setShowResolveMaintModal(false)}>Cancel</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowResolveMaintModal(false)}>Cancel</button>
                 <button type="submit" disabled={loading} className="btn-primary">{loading ? 'Resolving…' : 'Mark Resolved'}</button>
               </div>
             </form>
@@ -2441,19 +2446,19 @@ function App() {
       {/* ══════════ REJECT MODAL (Maint & Transfers) ══════════ */}
       {showRejectMaintModal && selectedMaintRequest && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{maxWidth:'460px'}}>
+          <div className="modal-content" style={{ maxWidth: '460px' }}>
             <div className="modal-header">
               <h2>Reject Request</h2>
-              <button className="close-btn" onClick={()=>setShowRejectMaintModal(false)}><X size={18}/></button>
+              <button className="close-btn" onClick={() => setShowRejectMaintModal(false)}><X size={18} /></button>
             </div>
             <form onSubmit={selectedMaintRequest.assetTag ? handleRejectTransferSubmit : handleRejectMaintSubmit}>
               <div className="form-group">
                 <label>Rejection Reason *</label>
-                <textarea required rows="3" placeholder="Provide a reason for rejection..." value={rejectReason} onChange={e=>setRejectReason(e.target.value)} style={{width:'100%'}}/>
+                <textarea required rows="3" placeholder="Provide a reason for rejection..." value={rejectReason} onChange={e => setRejectReason(e.target.value)} style={{ width: '100%' }} />
               </div>
               <div className="modal-actions">
-                <button type="button" className="btn-secondary" onClick={()=>setShowRejectMaintModal(false)}>Cancel</button>
-                <button type="submit" disabled={loading} className="btn-primary" style={{background:'#ef4444',borderColor:'#ef4444'}}>{loading ? 'Rejecting…' : 'Reject Request'}</button>
+                <button type="button" className="btn-secondary" onClick={() => setShowRejectMaintModal(false)}>Cancel</button>
+                <button type="submit" disabled={loading} className="btn-primary" style={{ background: '#ef4444', borderColor: '#ef4444' }}>{loading ? 'Rejecting…' : 'Reject Request'}</button>
               </div>
             </form>
           </div>

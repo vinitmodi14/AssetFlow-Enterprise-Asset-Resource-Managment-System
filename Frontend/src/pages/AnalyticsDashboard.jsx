@@ -1,24 +1,6 @@
 import { useState, useMemo } from 'react';
 import { TrendingUp, TrendingDown, BarChart3, Filter } from 'lucide-react';
 
-// ---------------------------------------------------------------------------
-// AnalyticsDashboard  (PDF Screen 9 — Reports & Analytics)
-//
-// REAL DATA (from existing /api/dashboard/stats -> allAssets):
-//   - KPI summary cards
-//   - Department / category / status filters
-//
-// MOCK DATA (clearly marked below) — backend does not yet track usage
-// history, so these are placeholders until a real endpoint exists:
-//   - Asset utilization trends over time
-//   - Most-used vs idle assets (needs a usage/booking-count field per asset)
-//
-// NOTE for backend teammate: to make this real, we'd need either:
-//   - a `usageCount` / `lastUsedDate` field on the Asset model, or
-//   - a dedicated endpoint: GET /api/reports/utilization?from=&to=
-// ---------------------------------------------------------------------------
-
-// Mock trend data — replace with real time-series data once tracked
 const MOCK_UTILIZATION_TREND = [
   { month: 'Feb', utilizationRate: 62 },
   { month: 'Mar', utilizationRate: 68 },
