@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { 
   LayoutDashboard, 
@@ -13,6 +12,8 @@ import {
   Clock, 
   Calendar, 
   ArrowLeftRight, 
+  ArrowRightLeft,
+  Package,
   User, 
   Mail, 
   Lock, 
@@ -21,6 +22,7 @@ import {
 } from 'lucide-react';
 import './App.css';
 import AssetDirectory from './pages/AssetDirectory';
+import AssetAllocation from './pages/AssetAllocation';
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -673,12 +675,19 @@ function App() {
               </button>
             )}
             <button 
-  className={`nav-item ${activeTab === 'assets' ? 'active' : ''}`}
-  onClick={() => setActiveTab('assets')}
->
-  <Package size={18} />
-  <span>Asset Directory</span>
-</button>
+              className={`nav-item ${activeTab === 'assets' ? 'active' : ''}`}
+              onClick={() => setActiveTab('assets')}
+            >
+              <Package size={18} />
+              <span>Asset Directory</span>
+            </button>
+            <button 
+              className={`nav-item ${activeTab === 'allocation' ? 'active' : ''}`}
+              onClick={() => setActiveTab('allocation')}
+            >
+              <ArrowRightLeft size={18} />
+              <span>Allocation & Transfer</span>
+            </button>
           </nav>
         </div>
 
@@ -957,8 +966,11 @@ function App() {
           </div>
         )}
         {activeTab === 'assets' && (
-  <AssetDirectory allAssets={allAssets} />
-)}
+          <AssetDirectory allAssets={allAssets} />
+        )}
+        {activeTab === 'allocation' && (
+          <AssetAllocation allAssets={allAssets} employees={directoryUsers} />
+        )}
       </main>
 
       {/* MODAL 1: REGISTER ASSET */}
