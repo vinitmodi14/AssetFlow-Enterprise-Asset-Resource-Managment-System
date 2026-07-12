@@ -1,0 +1,5 @@
+DROP DATABASE IF EXISTS assetflow;
+CREATE DATABASE assetflow;
+USE assetflow;
+ 
+SET FOREIGN_KEY_CHECKS = 0;
