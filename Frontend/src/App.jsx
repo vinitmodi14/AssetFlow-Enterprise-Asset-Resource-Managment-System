@@ -5,11 +5,12 @@ import {
   ArrowLeftRight, User, Mail, Lock, RefreshCw, Building2,
   Tag, Pencil, Trash2, ChevronRight, FolderTree, X,
   Package, CalendarRange, Eye, Upload, FileText, Check, AlertTriangle,
-  Info, CalendarDays, ExternalLink, ClipboardCheck
+  Info, CalendarDays, ExternalLink, ClipboardCheck, BarChart2
 } from 'lucide-react';
 import './App.css';
 import AssetDirectory from './pages/AssetDirectory';
 import AssetAudit from './pages/AssetAudit';
+import AssetAnalytics from './pages/AssetAnalytics';
 
 const API_BASE = "http://localhost:5000/api";
 
@@ -1026,6 +1027,11 @@ function App() {
             <button className={`nav-item ${activeTab==='audit' ? 'active' : ''}`} onClick={()=>setActiveTab('audit')}>
               <ClipboardCheck size={18}/><span>Asset Audits</span>
             </button>
+            {(currentUser.role === 'Admin' || currentUser.role === 'Asset Manager') && (
+              <button className={`nav-item ${activeTab==='analytics' ? 'active' : ''}`} onClick={()=>setActiveTab('analytics')}>
+                <BarChart2 size={18}/><span>Analytics & Reports</span>
+              </button>
+            )}
             {currentUser.role === 'Admin' && (
               <button className={`nav-item ${activeTab==='orgSetup' ? 'active' : ''}`} onClick={()=>setActiveTab('orgSetup')}>
                 <Building2 size={18}/><span>Organization Setup</span>
@@ -1057,6 +1063,7 @@ function App() {
               {activeTab === 'booking' && 'Resource Bookings'}
               {activeTab === 'maintenance' && 'Maintenance Center'}
               {activeTab === 'audit' && 'Asset Audits'}
+              {activeTab === 'analytics' && 'Analytics & Reports'}
               {activeTab === 'orgSetup' && 'Organization Setup'}
             </h1>
             <p className="header-meta">Logged in as <strong style={{color:'var(--text-title)'}}>{currentUser.name}</strong> · {currentUser.role}</p>
@@ -1744,6 +1751,9 @@ function App() {
             departments={departments}
             directoryUsers={directoryUsers} 
           />
+        )}
+        {activeTab === 'analytics' && (
+          <AssetAnalytics token={token} />
         )}
       </main>
 
