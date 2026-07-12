@@ -7,7 +7,6 @@ function AssetDirectory({ allAssets = [] }) {
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [selectedAsset, setSelectedAsset] = useState(null);
  
-  // Derive filter dropdown options from the actual data we have
   const categories = useMemo(() => {
     const unique = new Set(allAssets.map((a) => a.category).filter(Boolean));
     return ['All', ...Array.from(unique)];
